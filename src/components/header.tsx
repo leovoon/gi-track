@@ -34,7 +34,7 @@ export default function Header() {
         </NavigationMenuList>
 
         {/*User nav*/}
-        <NavigationMenuList>
+        <NavigationMenuList className="sm:gap-x-2">
           <NavigationMenuItem>
             <Link
               to="https://github.com/leovoon/github-issues"

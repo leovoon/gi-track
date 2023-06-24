@@ -23,11 +23,23 @@ const ClerkProviderWithRoutes = () => {
       <Header />
 
       <Routes>
-        <Route path="/" element={<PublicPage />} />
+        <Route
+          path="/"
+          element={
+            <>
+              <SignedIn>
+                <AppPage />
+              </SignedIn>
+              <SignedOut>
+                <PublicPage />
+              </SignedOut>
+            </>
+          }
+        />
         <Route path="/sign-in/*" element={<SignInPage />} />
         <Route path="/sign-up/*" element={<SignUpPage />} />
         <Route
-          path="/app"
+          path="/app/*"
           element={
             <>
               <SignedIn>

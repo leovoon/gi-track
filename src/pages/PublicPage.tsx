@@ -1,11 +1,9 @@
-import { SignIn } from "@clerk/clerk-react";
+import SignInPage from "./SignInPage";
 
 const PublicPage = () => {
   return (
     <>
-      <div className="grid place-items-center h-1/2 mt-12">
-        <SignIn />
-      </div>
+      <SignInPage />
     </>
   );
 };

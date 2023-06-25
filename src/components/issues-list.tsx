@@ -1,9 +1,6 @@
-import { IssueItem, useIssues } from "@/hooks/useIssues";
-import { Card, CardDescription, CardHeader, CardTitle } from "./ui/card";
-import TimeAgo from "timeago-react";
-import { BadgeAlert, MessageSquare, User } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { Issue, useIssues } from "@/hooks/useIssues";
 import { Skeleton } from "./ui/skeleton";
+import { IssueItem } from "./issue-item";
 
 export default function IssuesList() {
   const issues = useIssues();
@@ -35,42 +32,8 @@ export default function IssuesList() {
     </>
   ) : (
     <div className="space-y-4 mt-4">
-      {issues.data?.items.map((issue: IssueItem) => (
-        <Card className="grid grid-cols-8 sm:grid-cols-9">
-          <div className="col-span-1 -mr-6  grid place-items-center">
-            <BadgeAlert />
-          </div>
-          <div className="col-span-7 sm:col-span-7">
-            <CardHeader>
-              <CardTitle>{issue.title}</CardTitle>
-            </CardHeader>
-            <CardDescription>
-              <div className="ml-6 pb-4">
-                {`#${issue.id} `.slice(0, 3)} opened{" "}
-                <TimeAgo datetime={issue.created_at} />
-                {"  "}
-                by {issue.user.login}
-              </div>
-            </CardDescription>
-          </div>
-          <div className="col-span-8 sm:col-span-1 grid place-items-end sm:place-items-center">
-            <div className="flex gap-2 justify-start items-center p-2">
-              <MessageSquare size="20" strokeWidth={2} />
-              {issue.user.avatar_url && (
-                <Avatar className="w-6 h-6">
-                  <AvatarImage
-                    src={issue.user.avatar_url}
-                    alt={issue.user.login}
-                  />
-                  <AvatarFallback>
-                    <User />
-                  </AvatarFallback>
-                </Avatar>
-              )}
-              <div className="text-sm">{issue.comments}</div>
-            </div>
-          </div>
-        </Card>
+      {issues.data?.items.map((issue: Issue) => (
+        <IssueItem key={issue.id} {...issue} />
       ))}
     </div>
   );

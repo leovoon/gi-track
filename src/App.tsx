@@ -4,7 +4,13 @@ import {
   SignedIn,
   SignedOut,
 } from "@clerk/clerk-react";
-import { Route, Routes, BrowserRouter, useNavigate } from "react-router-dom";
+import {
+  Route,
+  Routes,
+  BrowserRouter,
+  useNavigate,
+  Link,
+} from "react-router-dom";
 import PublicPage from "./pages/PublicPage";
 import AppPage from "./pages/AppPage";
 import Header from "./components/header";
@@ -39,7 +45,7 @@ const ClerkProviderWithRoutes = () => {
         <Route path="/sign-in/*" element={<SignInPage />} />
         <Route path="/sign-up/*" element={<SignUpPage />} />
         <Route
-          path="/app/*"
+          path="/app"
           element={
             <>
               <SignedIn>
@@ -49,6 +55,17 @@ const ClerkProviderWithRoutes = () => {
                 <RedirectToSignIn />
               </SignedOut>
             </>
+          }
+        />
+        <Route
+          path="*"
+          element={
+            <div className="text-center my-40">
+              <h1>404 Page Not Found 😅</h1>
+              <Link to="/app" className="underline p-2 mt-4">
+                back to app
+              </Link>
+            </div>
           }
         />
       </Routes>

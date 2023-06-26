@@ -1,10 +1,11 @@
 import { Issue } from "@/hooks/useIssues";
 import { Card, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import TimeAgo from "timeago-react";
-import { BadgeAlert, MessageSquare, User } from "lucide-react";
+import { BadgeAlert, CheckCircle, MessageSquare, User } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Badge } from "./ui/badge";
 import { useMemo } from "react";
+import { getLabelColor } from "@/lib/utils";
 
 export function IssueItem({
   id,
@@ -15,49 +16,26 @@ export function IssueItem({
   assignee,
   labels,
   repository_url,
+  state,
 }: Issue) {
   const repoName = useMemo(() => {
     const repo = repository_url.split("/");
     const repoWithGit = repo[repo.length - 1];
-    return repoWithGit.replace("-git", "");
+    return repoWithGit;
   }, [repository_url]);
 
   return (
     <Card className="grid grid-cols-8 sm:grid-cols-9">
       <div className="col-span-1 -mr-6  grid place-items-center">
-        <BadgeAlert />
+        {state === "closed" ? <CheckCircle color="purple" /> : <BadgeAlert />}
       </div>
       <div className="col-span-7 sm:col-span-7">
         <CardHeader>
           <CardTitle className="leading-6">
             <span className="text-muted-foreground">{repoName}</span> {title}
-            <div className="space-x-1">
+            <div className="flex flex-wrap gap-1">
               {labels.map((label) => (
-                <Badge
-                  key={label.id}
-                  variant={
-                    label.name === "bug"
-                      ? "reddish"
-                      : label.name === "documentation"
-                      ? "bluish"
-                      : label.name === "enhancement"
-                      ? "cyan"
-                      : label.name === "duplicate"
-                      ? "zinc"
-                      : label.name === "good first issue"
-                      ? "purple"
-                      : label.name === "help wanted"
-                      ? "teal"
-                      : label.name === "invalid"
-                      ? "yellow"
-                      : label.name === "question"
-                      ? "violet"
-                      : label.name === "wontfix"
-                      ? "stone"
-                      : "secondary"
-                  }
-                  color={label.color}
-                >
+                <Badge key={label.id} variant={getLabelColor(label.name)}>
                   {label.name}
                 </Badge>
               ))}

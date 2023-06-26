@@ -6,7 +6,17 @@ export default function IssuesList() {
   const issues = useIssues();
 
   console.log(issues.data);
-  return issues.isLoading ? (
+
+  if (issues.isError)
+    return (
+      <div className="text-center">
+        <h1 className="text-2xl font-bold">Error</h1>
+        <p className="text-gray-500">Something went wrong</p>
+      </div>
+    );
+
+  return issues.status === "idle" &&
+    issues.isLoading ? null : issues.isLoading ? (
     <>
       {Array.from(Array(7), (_, i) => (
         <div
@@ -31,7 +41,7 @@ export default function IssuesList() {
       ))}
     </>
   ) : (
-    <div className="space-y-4 mt-4">
+    <div className="space-y-4">
       {issues.data?.items.map((issue: Issue) => (
         <IssueItem key={issue.id} {...issue} />
       ))}

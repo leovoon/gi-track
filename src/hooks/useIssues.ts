@@ -1,6 +1,7 @@
 import { useUser } from "@clerk/clerk-react";
 import { useQuery } from "react-query";
 import { useAccessToken } from "./useAccessToken";
+import { fetchWithHeaders } from "@/lib/utils";
 
 export interface Issues {
   total_count: number;
@@ -139,25 +140,14 @@ export interface Reactions {
 export function useIssues() {
   const { user } = useUser();
   const token = useAccessToken();
-  if (!user) throw new Error("No user found");
+  if (!user) throw new Error("No user");
   const username = user.username;
+  const searchString = encodeURIComponent(
+    `author:${username} archived:false is:issue is:open`
+  );
   const issues = useQuery<Issues>(
     ["issues", username, token],
-    async () => {
-      const searchString = `author:${username} archived:false is:issue is:open`;
-      const res = await fetch(
-        `https://api.github.com/search/issues?q=${encodeURIComponent(
-          searchString
-        )}`,
-        {
-          headers: {
-            Accept: "application/vnd.github+json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      return await res.json();
-    },
+    () => fetchWithHeaders(`/search/issues?q=${searchString}`, token),
     { enabled: !!token }
   );
 

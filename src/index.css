@@ -78,6 +78,6 @@
     @apply bg-background font-poppins text-foreground;
   }
   #root {
-    @apply max-w-screen-md w-full mx-auto;
+    @apply max-w-screen-lg w-full mx-auto;
   }
 }

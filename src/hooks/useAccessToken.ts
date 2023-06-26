@@ -26,7 +26,10 @@ export const useAccessToken = () => {
   const provider = "oauth_github";
   const { data, isError } = useQuery<OauthToken[]>(
     ["accessToken", userId, provider],
-    () => fetchAccessToken(userId, provider)
+    () => fetchAccessToken(userId, provider),
+    {
+      enabled: !!userId,
+    }
   );
 
   if (isError) console.error("Error fetching access token");

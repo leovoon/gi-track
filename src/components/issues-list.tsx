@@ -18,8 +18,7 @@ export default function IssuesList() {
       </div>
     );
 
-  return issues.status === "idle" &&
-    issues.isLoading ? null : issues.isLoading ? (
+  return issues.isIdle || issues.isLoading ? (
     <>
       {Array.from(Array(7), (_, i) => (
         <div

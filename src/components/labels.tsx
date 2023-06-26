@@ -4,7 +4,6 @@ import { cn, getLabelColor } from "@/lib/utils";
 import { Skeleton } from "./ui/skeleton";
 import { useContext } from "react";
 import { selectLabelContext } from "@/contexts/labelsContext";
-import { Button } from "./ui/button";
 
 type Label = {
   id: number;
@@ -16,11 +15,9 @@ export default function Labels() {
 
   const { selectedLabel, setSelectedLabel } = useContext(selectLabelContext);
 
-  if (labels.status === "idle" && labels.isLoading) return null;
-
   if (labels.isError) return <p>Something went wrong when fetching labels.</p>;
 
-  if (labels.isLoading)
+  if (labels.isIdle || labels.isLoading)
     return (
       <div className="flex flex-wrap gap-1">
         <Skeleton className="h-4 w-[45px] " />

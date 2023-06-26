@@ -1,9 +1,12 @@
 import { Issue, useIssues } from "@/hooks/useIssues";
 import { Skeleton } from "./ui/skeleton";
 import { IssueItem } from "./issue-item";
+import { useContext } from "react";
+import { selectedLabelContext } from "@/contexts/labelsContext";
 
 export default function IssuesList() {
-  const issues = useIssues();
+  const selectedLabel = useContext(selectedLabelContext);
+  const issues = useIssues(selectedLabel);
 
   console.log(issues.data);
 
@@ -27,8 +30,8 @@ export default function IssuesList() {
             <Skeleton className="h-8 w-8 rounded-full" />
           </div>
           <div className="col-span-7 sm:col-span-6 space-y-4">
-            <Skeleton className="h-4 w-[200px] sm:w-[500px] " />
-            <Skeleton className="h-4 w-[100px] sm:w-[300px] " />
+            <Skeleton className="h-4 w-[200px] sm:w-[250px] " />
+            <Skeleton className="h-4 w-[100px] sm:w-[150px] " />
           </div>
           <div className="col-span-8 sm:col-span-2 grid place-items-end sm:place-items-center">
             <div className="flex gap-2 justify-start items-center p-2">
@@ -42,9 +45,15 @@ export default function IssuesList() {
     </>
   ) : (
     <div className="space-y-4">
-      {issues.data?.items.map((issue: Issue) => (
-        <IssueItem key={issue.id} {...issue} />
-      ))}
+      {issues.data?.items && issues.data.items.length > 0 ? (
+        issues.data?.items.map((issue: Issue) => (
+          <IssueItem key={issue.id} {...issue} />
+        ))
+      ) : (
+        <div className="text-center">
+          <p className="text-gray-500">No issues found</p>
+        </div>
+      )}
     </div>
   );
 }

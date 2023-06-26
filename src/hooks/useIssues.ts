@@ -136,17 +136,31 @@ export interface Reactions {
   rocket: number;
   eyes: number;
 }
+const constructLabelsString = (label: string[] | null) => {
+  if (!label) {
+    return null;
+  }
+  return label
+    .map((item) => {
+      if (item.includes(" ")) {
+        return `label:"${item}"`;
+      }
+      return `label:"${item}"`;
+    })
+    .join(",");
+};
 
-export function useIssues() {
+export function useIssues(label?: string[] | null) {
   const { user } = useUser();
   const token = useAccessToken();
   if (!user) throw new Error("No user");
   const username = user.username;
+  const labelsString = label?.length ? constructLabelsString(label) : "";
   const searchString = encodeURIComponent(
-    `author:${username} archived:false is:issue is:open`
+    `author:${username} archived:false is:issue is:open ${labelsString}`
   );
   const issues = useQuery<Issues>(
-    ["issues", username, token],
+    ["issues", { searchString, token }],
     () => fetchWithHeaders(`/search/issues?q=${searchString}`, token),
     { enabled: !!token }
   );

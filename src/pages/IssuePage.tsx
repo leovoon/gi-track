@@ -9,6 +9,8 @@ import { ChevronLeftIcon } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import TimeAgo from "timeago-react";
 import snarkdown from "snarkdown";
+import SkeletonComments from "@/components/skeleton-comments";
+import SkeletonIssue from "@/components/skeleton-issue";
 
 export default function IssuePage() {
   const params = useParams<{
@@ -32,7 +34,7 @@ export default function IssuePage() {
       </Button>
 
       {issueQuery.isLoading ? (
-        <div>Loading issue...</div>
+        <SkeletonIssue />
       ) : issueQuery.isError ? (
         <div>Error loading issue</div>
       ) : (
@@ -74,8 +76,7 @@ export default function IssuePage() {
               )}
               <p className="text-xs sm:text-sm text-muted-foreground space-x-1">
                 <span>
-                  {issue.author_association === "OWNER" ? "You" : "Someone"}{" "}
-                  opened this issue <TimeAgo datetime={issue.created_at} />
+                  You opened this issue <TimeAgo datetime={issue.created_at} />
                 </span>
                 <span>·</span>
                 <span className="inline-flex space-x-1">
@@ -92,7 +93,7 @@ export default function IssuePage() {
       <Separator className="my-4" />
 
       {issueCommentsQuery.isLoading ? (
-        <div>Loading comments..</div>
+        <SkeletonComments />
       ) : issueCommentsQuery.isError ? (
         <div>Error loading comments</div>
       ) : (

@@ -17,7 +17,7 @@ export default function Labels() {
 
   if (labels.isError) return <p>Something went wrong when fetching labels.</p>;
 
-  if (labels.isIdle || labels.isLoading)
+  if (labels.isLoading)
     return (
       <div className="flex flex-wrap gap-1">
         <Skeleton className="h-4 w-[45px] " />

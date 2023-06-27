@@ -25,11 +25,11 @@ export function IssueItem({
   }, [repository_url]);
 
   return (
-    <Card className="grid grid-cols-8 sm:grid-cols-9">
+    <Card className="grid grid-cols-8 md:grid-cols-12">
       <div className="col-span-1 -mr-6  grid place-items-center">
         {state === "closed" ? <CheckCircle color="purple" /> : <BadgeAlert />}
       </div>
-      <div className="col-span-7 sm:col-span-7">
+      <div className="col-span-7 md:col-span-9">
         <CardHeader>
           <CardTitle className="leading-6">
             <span className="text-muted-foreground">{repoName}</span> {title}
@@ -42,13 +42,13 @@ export function IssueItem({
             </div>
           </CardTitle>
         </CardHeader>
-        <CardDescription className="ml-6 pb-4 text-xs sm:text-sm">
+        <CardDescription className="ml-6 pb-4 text-xs md:text-sm">
           {`#${id} `.slice(0, 3)} opened <TimeAgo datetime={created_at} />
           {"  "}
           by {user.login}
         </CardDescription>
       </div>
-      <div className="col-span-8 sm:col-span-1 grid place-items-end sm:place-items-center">
+      <div className="col-span-8 md:col-span-2 grid place-items-end md:place-items-center">
         <div className="flex gap-2 justify-start items-center p-2">
           {assignee && (
             <Avatar className="w-6 h-6">

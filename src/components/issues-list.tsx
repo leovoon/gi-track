@@ -8,7 +8,8 @@ export default function IssuesList() {
   const selectedLabel = useContext(selectedLabelContext);
   const issues = useIssues(selectedLabel);
 
-  console.log(issues.data);
+  // When cache is empty, when page is refreshed, fetchStatus is "idle" and isLoading is true
+  // if (issues.fetchStatus === "idle" && issues.isLoading)
 
   if (issues.isError)
     return (
@@ -18,7 +19,7 @@ export default function IssuesList() {
       </div>
     );
 
-  return issues.isIdle || issues.isLoading ? (
+  return issues.isLoading ? (
     <>
       {Array.from(Array(7), (_, i) => (
         <div

@@ -1,11 +1,11 @@
 import { fetchWithHeaders } from "@/lib/utils";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useAccessToken } from "./useAccessToken";
 
 export default function useLabels() {
   const token = useAccessToken();
   const labels = useQuery(
-    "labels",
+    ["labels"],
     () => fetchWithHeaders("/repos/leovoon/practice-git/labels", token),
     {
       enabled: !!token,

@@ -1,5 +1,5 @@
 import { useUser } from "@clerk/clerk-react";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useAccessToken } from "./useAccessToken";
 import { fetchWithHeaders } from "@/lib/utils";
 

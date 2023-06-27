@@ -2,7 +2,7 @@ import StateIcon from "@/components/state-icon";
 import { Button } from "@/components/ui/button";
 import { useIssue } from "@/hooks/useIssue";
 import { cn } from "@/lib/utils";
-import { Badge, ChevronLeftIcon } from "lucide-react";
+import { ChevronLeftIcon } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import TimeAgo from "timeago-react";
 

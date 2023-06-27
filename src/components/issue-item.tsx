@@ -1,7 +1,7 @@
 import { Issue } from "@/hooks/useIssues";
 import { Card, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import TimeAgo from "timeago-react";
-import { CheckCircle, CircleDot, MessageSquare, User } from "lucide-react";
+import { MessageSquare, User } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Badge } from "./ui/badge";
 import { useMemo } from "react";

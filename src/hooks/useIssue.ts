@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useAccessToken } from "./useAccessToken";
 import { fetchWithHeaders } from "@/lib/utils";
-import { Params, useParams } from "react-router-dom";
 
 export interface Issue {
   url: string;

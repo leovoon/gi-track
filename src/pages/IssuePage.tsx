@@ -72,10 +72,17 @@ export default function IssuePage() {
                   ))}
                 </ul>
               )}
-              <p className="text-xs sm:text-sm text-muted-foreground">
-                {issue.author_association === "OWNER" ? "You" : "Someone"}{" "}
-                opened this issue <TimeAgo datetime={issue.created_at} />{" "}
-                {issue.comments} · {issue.comments > 1 ? "comments" : "comment"}
+              <p className="text-xs sm:text-sm text-muted-foreground space-x-1">
+                <span>
+                  {issue.author_association === "OWNER" ? "You" : "Someone"}{" "}
+                  opened this issue <TimeAgo datetime={issue.created_at} />
+                </span>
+                <span>·</span>
+                <span className="inline-flex space-x-1">
+                  <span>{issue.comments}</span>
+                  <span>·</span>
+                  <span>{issue.comments > 1 ? "comments" : "comment"}</span>
+                </span>
               </p>
             </div>
           </div>
@@ -94,7 +101,7 @@ export default function IssuePage() {
             {comments.length > 0 ? (
               comments.map((comment) => (
                 <li key={comment.id} className="flex gap-2">
-                  <Avatar className="h-10 w-10 shrink-0">
+                  <Avatar className="h-8 w-8 sm:h-10 sm:w-10 shrink-0">
                     <AvatarImage
                       className="rounded-full aspect-square h-full w-full"
                       src={comment.user.avatar_url}
@@ -104,7 +111,7 @@ export default function IssuePage() {
                   </Avatar>
                   <div className="w-full border">
                     <div className="space-x-2 p-2 border-b bg-muted">
-                      <span className="font-medium text-sm sm:text-base">
+                      <span className="font-semibold text-sm sm:text-base">
                         {comment.user.login}
                       </span>
                       <span className="text-xs sm:text-sm text-muted-foreground">
@@ -115,12 +122,12 @@ export default function IssuePage() {
                         className="text-xs sm:text-sm text-muted-foreground"
                       />
                     </div>
-                    <p
-                      className="p-2"
+                    <div
+                      className="p-2 font-normal text-sm sm:text-base dark:text-foreground/80 break-words"
                       dangerouslySetInnerHTML={{
                         __html: snarkdown(comment.body),
                       }}
-                    ></p>
+                    ></div>
                   </div>
                 </li>
               ))

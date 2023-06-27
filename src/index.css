@@ -80,4 +80,10 @@
   #root {
     @apply max-w-screen-lg w-full mx-auto;
   }
+  code {
+    word-break: break-all;
+  }
+  blockquote {
+    @apply border-l-4 border-accent-foreground p-2 my-2 bg-muted;
+  }
 }

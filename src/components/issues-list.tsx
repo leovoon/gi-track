@@ -8,8 +8,8 @@ import { statusContext } from "@/contexts/statusContext";
 export default function IssuesList() {
   const selectedLabel = useContext(selectedLabelContext);
   const { status: selectedStatus } = useContext(statusContext);
-  console.log(selectedStatus);
   const issues = useIssues(selectedLabel, selectedStatus);
+  console.log(issues.data);
 
   // When cache is empty, when page is refreshed, fetchStatus is "idle" and isLoading is true
   // if (issues.fetchStatus === "idle" && issues.isLoading)

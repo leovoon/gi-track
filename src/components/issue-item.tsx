@@ -1,17 +1,13 @@
 import { Issue } from "@/hooks/useIssues";
 import { Card, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import TimeAgo from "timeago-react";
-import {
-  BadgeAlert,
-  CheckCircle,
-  CircleDot,
-  MessageSquare,
-  User,
-} from "lucide-react";
+import { CheckCircle, CircleDot, MessageSquare, User } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Badge } from "./ui/badge";
 import { useMemo } from "react";
 import { getLabelColor } from "@/lib/utils";
+import { Link } from "react-router-dom";
+import StateIcon from "./state-icon";
 
 export function IssueItem({
   id,
@@ -23,33 +19,37 @@ export function IssueItem({
   labels,
   repository_url,
   state,
+  number,
 }: Issue) {
-  const repoName = useMemo(() => {
+  const { repoName, repoUsername } = useMemo(() => {
     const repo = repository_url.split("/");
-    const repoWithGit = repo[repo.length - 1];
-    return repoWithGit;
+    const repoName = repo[repo.length - 1];
+    const repoUsername = repo[repo.length - 2];
+    return {
+      repoName,
+      repoUsername,
+    };
   }, [repository_url]);
 
   return (
     <Card className="grid grid-cols-8 md:grid-cols-12">
       <div className="col-span-1 -mr-6  grid place-items-center">
-        {state === "closed" ? (
-          <CheckCircle color="purple" />
-        ) : (
-          <CircleDot color="green" />
-        )}
+        <StateIcon state={state} />
       </div>
       <div className="col-span-7 md:col-span-9">
         <CardHeader>
-          <CardTitle className="leading-6">
-            <span className="text-muted-foreground">{repoName}</span> {title}
-            <div className="flex flex-wrap gap-1">
-              {labels.map((label) => (
-                <Badge key={label.id} variant={getLabelColor(label.name)}>
-                  {label.name}
-                </Badge>
-              ))}
-            </div>
+          <CardTitle className="leading-6 group">
+            <Link to={`/issue/${repoUsername}/${repoName}/${number}`}>
+              <span className="text-muted-foreground/50">{repoName}</span>{" "}
+              <span className="group-hover:text-muted-foreground">{title}</span>
+              <div className="flex flex-wrap gap-1">
+                {labels.map((label) => (
+                  <Badge key={label.id} variant={getLabelColor(label.name)}>
+                    {label.name}
+                  </Badge>
+                ))}
+              </div>
+            </Link>
           </CardTitle>
         </CardHeader>
         <CardDescription className="ml-6 pb-4 text-xs md:text-sm">

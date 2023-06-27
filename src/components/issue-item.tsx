@@ -5,7 +5,7 @@ import { MessageSquare, User } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Badge } from "./ui/badge";
 import { useMemo } from "react";
-import { getLabelColor } from "@/lib/utils";
+import { cn, getLabelColor } from "@/lib/utils";
 import { Link } from "react-router-dom";
 import StateIcon from "./state-icon";
 
@@ -15,11 +15,11 @@ export function IssueItem({
   user,
   created_at,
   comments,
-  assignee,
   labels,
   repository_url,
   state,
   number,
+  assignees,
 }: Issue) {
   const { repoName, repoUsername } = useMemo(() => {
     const repo = repository_url.split("/");
@@ -60,14 +60,28 @@ export function IssueItem({
       </div>
       <div className="col-span-8 md:col-span-2 grid place-items-end md:place-items-center">
         <div className="flex gap-2 justify-start items-center p-2">
-          {assignee && (
-            <Avatar className="w-6 h-6">
-              <AvatarImage src={assignee.avatar_url} alt={assignee.login} />
-              <AvatarFallback>
-                <User />
-              </AvatarFallback>
-            </Avatar>
+          {assignees && (
+            <div
+              className={cn("flex -space-x-1", {
+                "-space-x-3": assignees.length > 2,
+                "-space-x-4": assignees.length > 5,
+              })}
+            >
+              {assignees.map((assignee) => (
+                <Avatar className="w-5 h-5 sm:w-6 sm:h-6 shrink-0 ">
+                  <AvatarImage
+                    className="aspect-square w-full h-full"
+                    src={assignee.avatar_url}
+                    alt={assignee.login}
+                  />
+                  <AvatarFallback>
+                    <User />
+                  </AvatarFallback>
+                </Avatar>
+              ))}
+            </div>
           )}
+
           {comments > 0 && (
             <div className="text-sm flex gap-2">
               <MessageSquare size="20" strokeWidth={2} />

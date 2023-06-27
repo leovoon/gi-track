@@ -20,7 +20,7 @@ export default function Status() {
         setStatus(value);
       }}
     >
-      <SelectTrigger className="w-1/2">
+      <SelectTrigger className="w-[220px]">
         <SelectValue placeholder="Select a status to filter" />
       </SelectTrigger>
       <SelectContent>

@@ -1,7 +1,13 @@
 import { Issue } from "@/hooks/useIssues";
 import { Card, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import TimeAgo from "timeago-react";
-import { BadgeAlert, CheckCircle, MessageSquare, User } from "lucide-react";
+import {
+  BadgeAlert,
+  CheckCircle,
+  CircleDot,
+  MessageSquare,
+  User,
+} from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Badge } from "./ui/badge";
 import { useMemo } from "react";
@@ -27,7 +33,11 @@ export function IssueItem({
   return (
     <Card className="grid grid-cols-8 md:grid-cols-12">
       <div className="col-span-1 -mr-6  grid place-items-center">
-        {state === "closed" ? <CheckCircle color="purple" /> : <BadgeAlert />}
+        {state === "closed" ? (
+          <CheckCircle color="purple" />
+        ) : (
+          <CircleDot color="green" />
+        )}
       </div>
       <div className="col-span-7 md:col-span-9">
         <CardHeader>

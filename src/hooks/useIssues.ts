@@ -150,14 +150,15 @@ const constructLabelsString = (label: string[] | null) => {
     .join(",");
 };
 
-export function useIssues(label?: string[] | null) {
+export function useIssues(label?: string[] | null, status?: string) {
   const { user } = useUser();
   const token = useAccessToken();
   if (!user) throw new Error("No user");
   const username = user.username;
+  const statusString = status ? `is:${status}` : "";
   const labelsString = label?.length ? constructLabelsString(label) : "";
   const searchString = encodeURIComponent(
-    `author:${username} archived:false is:issue is:open ${labelsString}`
+    `author:${username} archived:false is:issue ${statusString} ${labelsString}`
   );
   const issues = useQuery<Issues>(
     ["issues", { searchString, token }],

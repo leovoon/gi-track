@@ -189,8 +189,6 @@ export function useSearchGlobalIssues(
   const labelsStr = label?.length ? constructLabelsString(label) : "";
   let searchStr = search;
 
-  console.log("run?");
-
   if (!search) {
     searchStr = "Tanstack/query";
   }

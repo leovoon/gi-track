@@ -11,7 +11,11 @@ import { statusContext, statusType } from "@/contexts/statusContext";
 import { useContext } from "react";
 
 export default function Status() {
-  const statusItems = ["Open", "Closed"];
+  const statusItems = [
+    { label: "Open", value: "open" },
+    { label: "Closed", value: "closed" },
+    { label: "All", value: "" },
+  ];
   const { setStatus } = useContext(statusContext);
 
   return (
@@ -26,9 +30,9 @@ export default function Status() {
       <SelectContent>
         <SelectGroup>
           <SelectLabel>Status</SelectLabel>
-          {statusItems.map((item) => (
-            <SelectItem key={item} value={item}>
-              {item}
+          {statusItems.map(({ label, value }) => (
+            <SelectItem key={value} value={value}>
+              {label}
             </SelectItem>
           ))}
         </SelectGroup>

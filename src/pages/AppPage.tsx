@@ -5,7 +5,8 @@ import {
   SelectLabelContextProvider,
   SelectedLabelProvider,
 } from "@/contexts/labelsContext";
-import { SearchContextProvider } from "@/contexts/searchContext";
+import { SearchGlobalContextProvider } from "@/contexts/searchGlobalContext";
+import { SearchOwnContextProvider } from "@/contexts/searchOwnContext";
 import { StatusContextProvider } from "@/contexts/statusContext";
 
 const AppPage = () => {
@@ -17,9 +18,11 @@ const AppPage = () => {
             <section className="w-full order-2 sm:order-1">
               <h1 className="text-xl mb-5">Issues List</h1>
               <SelectedLabelProvider>
-                <SearchContextProvider>
-                  <IssuesList />
-                </SearchContextProvider>
+                <SearchGlobalContextProvider>
+                  <SearchOwnContextProvider>
+                    <IssuesList />
+                  </SearchOwnContextProvider>
+                </SearchGlobalContextProvider>
               </SelectedLabelProvider>
             </section>
             <aside className="sm:w-1/2 order-1 sm:order-2 space-y-4">

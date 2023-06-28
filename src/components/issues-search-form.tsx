@@ -1,24 +1,37 @@
 import { useContext } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { searchContext } from "@/contexts/searchContext";
+import { searchGlobalContext } from "@/contexts/searchGlobalContext";
+import { searchOwnContext } from "@/contexts/searchOwnContext";
 
-export default function IssuesSearchForm() {
-  const { setSearch } = useContext(searchContext);
+export default function IssuesSearchForm({ myIssueOnly = false }) {
+  const { setSearchGlobalTerm } = useContext(searchGlobalContext);
+  const { setSearchOwnTerm } = useContext(searchOwnContext);
 
   return (
     <form
       onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setSearch(
-          (e.currentTarget.elements.namedItem("search") as HTMLInputElement)
-            .value
-        );
+        const value = (
+          e.currentTarget.elements.namedItem("search") as HTMLInputElement
+        ).value;
+        if (myIssueOnly) setSearchOwnTerm(value);
+        else setSearchGlobalTerm(value);
       }}
       className="my-2"
     >
       <div className="flex w-full max-w-md items-center space-x-2">
-        <Input type="search" placeholder="Search issues" name="search" />
+        <Input
+          type="search"
+          placeholder="Search issues"
+          name="search"
+          onChange={(e) => {
+            if (e.target.value.length === 0) {
+              if (myIssueOnly) setSearchOwnTerm("");
+              else setSearchGlobalTerm("");
+            }
+          }}
+        />
         <Button type="submit" size="sm">
           Search
         </Button>

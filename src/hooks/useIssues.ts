@@ -152,26 +152,57 @@ const constructLabelsString = (label: string[] | null) => {
 };
 
 export function useIssues(
+  search: string,
   label?: string[] | null,
   status?: string,
-  me?: boolean,
-  search: string = ""
+  myIssuesOnly?: boolean
 ) {
   const { user } = useUser();
   const token = useAccessToken();
   if (!user) throw new Error("No user");
   const username = user.username;
-  const meOnly = me ? `author:${username}` : "";
   const statusStr = status ? `is:${status}` : "";
   const labelsStr = label?.length ? constructLabelsString(label) : "";
+  const myIssuesOnlyStr = myIssuesOnly ? `author:${username}` : "";
+
   const searchString = encodeURIComponent(
-    `${search} ${statusStr} ${labelsStr} ${meOnly} is:issue type:issue`
+    `${search} ${myIssuesOnlyStr} ${statusStr} ${labelsStr} is:issue type:issue`
   );
 
   const issues = useQuery<Issues>(
-    ["issues", { searchString, token }],
+    ["issues", { searchString, token, myIssuesOnly }],
     () => fetchWithHeaders(`/search/issues?q=${searchString}`, token),
-    { enabled: !!token }
+    { enabled: myIssuesOnly && !!token }
+  );
+
+  return issues;
+}
+
+export function useSearchGlobalIssues(
+  search: string,
+  label?: string[] | null,
+  status?: string,
+  myIssuesOnly?: boolean
+) {
+  const token = useAccessToken();
+  const statusStr = status ? `is:${status}` : "";
+  const labelsStr = label?.length ? constructLabelsString(label) : "";
+  let searchStr = search;
+
+  console.log("run?");
+
+  if (!search) {
+    searchStr = "Tanstack/query";
+  }
+
+  const searchString = encodeURIComponent(
+    `${searchStr} ${statusStr} ${labelsStr} is:issue type:issue`
+  );
+
+  const issues = useQuery<Issues>(
+    ["issues", { searchString, token, myIssuesOnly }],
+    () => fetchWithHeaders(`/search/issues?q=${searchString}`, token),
+    { enabled: !myIssuesOnly && !!token }
   );
 
   return issues;

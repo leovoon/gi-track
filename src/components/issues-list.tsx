@@ -1,62 +1,74 @@
-import { Issue, useIssues } from "@/hooks/useIssues";
-import { Skeleton } from "./ui/skeleton";
-import { IssueItem } from "./issue-item";
-import { useContext } from "react";
+import { useIssues } from "@/hooks/useIssues";
+import { useContext, useState } from "react";
 import { selectedLabelContext } from "@/contexts/labelsContext";
 import { statusContext } from "@/contexts/statusContext";
+import SkeletonIssues from "./skeleton-issues";
+import IssuesListResult from "./issues-list-result";
+import { searchContext } from "@/contexts/searchContext";
+import { Switch } from "./ui/switch";
+import { Label } from "./ui/label";
+import IssuesSearchForm from "./issues-search-form";
 
 export default function IssuesList() {
+  const [isMe, setIsMe] = useState(true);
   const selectedLabel = useContext(selectedLabelContext);
   const { status: selectedStatus } = useContext(statusContext);
-  const issues = useIssues(selectedLabel, selectedStatus);
-  console.log(issues.data);
+  const { search } = useContext(searchContext);
+  const issuesQuery = useIssues(selectedLabel, selectedStatus);
+  const searchIssuesQuery = useIssues(
+    selectedLabel,
+    selectedStatus,
+    isMe,
+    search
+  );
 
+  // console.log(issuesQuery.data);
   // When cache is empty, when page is refreshed, fetchStatus is "idle" and isLoading is true
-  // if (issues.fetchStatus === "idle" && issues.isLoading)
+  // if (issuesQuery.fetchStatus === "idle" && issuesQuery.isLoading)
 
-  if (issues.isError)
-    return (
-      <div className="text-center">
-        <h1 className="text-2xl font-bold">Error</h1>
-        <p className="text-gray-500">Something went wrong</p>
-      </div>
-    );
-
-  return issues.isLoading ? (
+  return (
     <>
-      {Array.from(Array(7), (_, i) => (
-        <div
-          key={i}
-          className="grid grid-cols-8 sm:grid-cols-9 gap-4 mt-6 space-y-4"
-        >
-          <div className="col-span-1 grid place-items-center">
-            <Skeleton className="h-8 w-8 rounded-full" />
-          </div>
-          <div className="col-span-7 sm:col-span-6 space-y-4">
-            <Skeleton className="h-4 w-[200px] sm:w-[250px] " />
-            <Skeleton className="h-4 w-[100px] sm:w-[150px] " />
-          </div>
-          <div className="col-span-8 sm:col-span-2 grid place-items-end sm:place-items-center">
-            <div className="flex gap-2 justify-start items-center p-2">
-              <Skeleton className="h-4 w-5 " />
-              <Skeleton className="h-4 w-5 rounded-full" />
-              <Skeleton className="h-4 w-5 " />
-            </div>
-          </div>
-        </div>
-      ))}
-    </>
-  ) : (
-    <div className="space-y-4">
-      {issues.data?.items && issues.data.items.length > 0 ? (
-        issues.data?.items.map((issue: Issue) => (
-          <IssueItem key={issue.id} {...issue} />
-        ))
-      ) : (
+      <div className="flex items-center space-x-2 mb-4">
+        <Switch
+          id="my-issue"
+          checked={isMe}
+          onCheckedChange={() => {
+            setIsMe(!isMe);
+          }}
+        />
+        <Label htmlFor="my-issue">My Issues only</Label>
+      </div>
+      <IssuesSearchForm />
+      {issuesQuery.isLoading ? (
+        <SkeletonIssues />
+      ) : issuesQuery.isError ? (
         <div className="text-center">
-          <p className="text-gray-500">No issues found</p>
+          <h1 className="text-2xl font-bold">Error</h1>
+          <p className="text-gray-500">Something went wrong</p>
         </div>
+      ) : searchIssuesQuery.fetchStatus === "idle" &&
+        searchIssuesQuery.isLoading ? (
+        <IssuesListResult data={issuesQuery.data} />
+      ) : (
+        <>
+          <h2 className="mt-6 mb-2">Search Results</h2>
+          {searchIssuesQuery.isLoading ? (
+            <SkeletonIssues />
+          ) : searchIssuesQuery.isError ? (
+            <div className="text-center">
+              <h1 className="text-2xl font-bold">Error</h1>
+              <p className="text-gray-500">Something went wrong</p>
+            </div>
+          ) : (
+            <>
+              <p className="text-sm mb-2 text-muted-foreground">
+                {searchIssuesQuery.data.total_count} Results
+              </p>
+              <IssuesListResult data={searchIssuesQuery.data} />
+            </>
+          )}
+        </>
       )}
-    </div>
+    </>
   );
 }

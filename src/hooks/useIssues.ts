@@ -7,6 +7,7 @@ export interface Issues {
   total_count: number;
   incomplete_results: boolean;
   items: Issue[];
+  message?: string;
 }
 
 export interface Issue {
@@ -150,16 +151,23 @@ const constructLabelsString = (label: string[] | null) => {
     .join(",");
 };
 
-export function useIssues(label?: string[] | null, status?: string) {
+export function useIssues(
+  label?: string[] | null,
+  status?: string,
+  me?: boolean,
+  search: string = ""
+) {
   const { user } = useUser();
   const token = useAccessToken();
   if (!user) throw new Error("No user");
   const username = user.username;
-  const statusString = status ? `is:${status}` : "";
-  const labelsString = label?.length ? constructLabelsString(label) : "";
+  const meOnly = me ? `author:${username}` : "";
+  const statusStr = status ? `is:${status}` : "";
+  const labelsStr = label?.length ? constructLabelsString(label) : "";
   const searchString = encodeURIComponent(
-    `author:${username} archived:false is:issue ${statusString} ${labelsString}`
+    `${search} ${statusStr} ${labelsStr} ${meOnly} is:issue type:issue`
   );
+
   const issues = useQuery<Issues>(
     ["issues", { searchString, token }],
     () => fetchWithHeaders(`/search/issues?q=${searchString}`, token),

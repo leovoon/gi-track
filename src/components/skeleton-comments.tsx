@@ -2,7 +2,7 @@ import { Skeleton } from "./ui/skeleton";
 
 export default function SkeletonComments() {
   return (
-    <div className="space-y-4">
+    <div className="space-y-8">
       <div className="flex gap-2">
         <Skeleton className="w-8 h-8 sm:w-10 sm:h-10 rounded-full" />
         <div className="w-full border border-muted flex flex-col">

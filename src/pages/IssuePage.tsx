@@ -102,7 +102,9 @@ export default function IssuePage() {
           comments && (
             <ul className="space-y-4">
               {comments.length > 0 ? (
-                comments.map((comment) => <CommentItem {...comment} />)
+                comments.map((comment) => (
+                  <CommentItem key={comment.id} {...comment} />
+                ))
               ) : (
                 <div>No comments</div>
               )}

@@ -30,10 +30,6 @@ export default function IssuesList() {
     myIssueOnly
   );
 
-  // console.log(issuesQuery.data);
-  // When cache is empty, when page is refreshed, fetchStatus is "idle" and isLoading is true
-  // if (issuesQuery.fetchStatus === "idle" && issuesQuery.isLoading)
-
   return (
     <>
       <div className="flex items-center space-x-2 mb-4">

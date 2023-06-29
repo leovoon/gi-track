@@ -1,7 +1,6 @@
 import { UseQueryOptions, useQueries } from "@tanstack/react-query";
-import { useAccessToken } from "./useAccessToken";
 import { fetchWithHeaders } from "@/lib/utils";
-
+import { useToken } from "./useAccessToken";
 export interface Issue {
   url: string;
   repository_url: string;
@@ -197,7 +196,7 @@ export function useIssue(params: {
   repoName?: string;
   issueId?: string;
 }) {
-  const token = useAccessToken();
+  const token = useToken();
   const { repoUsername, repoName, issueId } = params;
 
   const [issueQuery, issueCommentsQuery] = useQueries<

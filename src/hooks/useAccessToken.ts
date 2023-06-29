@@ -1,5 +1,6 @@
 import { useAuth } from "@clerk/clerk-react";
 import { useQuery } from "@tanstack/react-query";
+import { useSessionStorage } from "usehooks-ts";
 
 type OauthToken = {
   object: string;
@@ -12,10 +13,12 @@ type OauthToken = {
 
 async function fetchAccessToken(userId: string, provider: string) {
   const res = await fetch(
-    `https://node-clerk-proxy.vercel.app/api/users/${userId}/oauth_access_tokens/${provider}`
+    `${
+      import.meta.env.VITE_NODE_SERVER_URL
+    }/api/users/${userId}/oauth_access_tokens/${provider}`
   );
 
-  return await res.json();
+  return res.json();
 }
 
 export const useAccessToken = () => {
@@ -39,4 +42,10 @@ export const useAccessToken = () => {
   const token = data[0].token;
 
   return token;
+};
+
+export const useToken = () => {
+  const [value] = useSessionStorage("ac", "");
+
+  return value;
 };

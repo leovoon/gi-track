@@ -22,7 +22,6 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 export default function Header() {
   const { user, isSignedIn } = useUser();
-  console.log(user);
   return (
     <>
       <NavigationMenu className="mt-5 px-2 justify-between ">

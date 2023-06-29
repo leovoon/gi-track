@@ -1,6 +1,6 @@
 import { useUser } from "@clerk/clerk-react";
 import { useQuery } from "@tanstack/react-query";
-import { useAccessToken } from "./useAccessToken";
+import { useToken } from "./useAccessToken";
 import { fetchWithHeaders } from "@/lib/utils";
 
 export interface Issues {
@@ -158,7 +158,7 @@ export function useIssues(
   myIssuesOnly?: boolean
 ) {
   const { user } = useUser();
-  const token = useAccessToken();
+  const token = useToken();
   if (!user) throw new Error("No user");
   const username = user.username;
   const statusStr = status ? `is:${status}` : "";
@@ -172,7 +172,7 @@ export function useIssues(
   const issues = useQuery<Issues>(
     ["issues", { searchString, token, myIssuesOnly }],
     () => fetchWithHeaders(`/search/issues?q=${searchString}`, token),
-    { enabled: myIssuesOnly && !!token }
+    { enabled: myIssuesOnly && !!token, staleTime: 1000 * 60 }
   );
 
   return issues;
@@ -184,7 +184,7 @@ export function useSearchGlobalIssues(
   status?: string,
   myIssuesOnly?: boolean
 ) {
-  const token = useAccessToken();
+  const token = useToken();
   const statusStr = status ? `is:${status}` : "";
   const labelsStr = label?.length ? constructLabelsString(label) : "";
   let searchStr = search;
@@ -198,9 +198,9 @@ export function useSearchGlobalIssues(
   );
 
   const issues = useQuery<Issues>(
-    ["issues", { searchString, token, myIssuesOnly }],
+    ["issues-global", { searchString, token, myIssuesOnly }],
     () => fetchWithHeaders(`/search/issues?q=${searchString}`, token),
-    { enabled: !myIssuesOnly && !!token }
+    { enabled: !myIssuesOnly && !!token, staleTime: 1000 * 60 }
   );
 
   return issues;

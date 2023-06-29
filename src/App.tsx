@@ -66,7 +66,7 @@ const ClerkProviderWithRoutes = () => {
               <div className="text-center my-40">
                 <h1>404 Page Not Found 😅</h1>
                 <Link to="/" className="underline p-2 mt-4">
-                  back to app
+                  back to home
                 </Link>
               </div>
             }

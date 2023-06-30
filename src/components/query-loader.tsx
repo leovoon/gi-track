@@ -6,7 +6,9 @@ export default function QueryLoader({
   className,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
-  const isFetching = useIsFetching();
+  const isFetching = useIsFetching({
+    type: "inactive",
+  });
   if (!isFetching) return null;
 
   return (

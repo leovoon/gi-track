@@ -8,8 +8,19 @@ import {
 import { SearchGlobalContextProvider } from "@/contexts/searchGlobalContext";
 import { SearchOwnContextProvider } from "@/contexts/searchOwnContext";
 import { StatusContextProvider } from "@/contexts/statusContext";
+import { useAccessToken } from "@/hooks/useAccessToken";
+import { useEffect } from "react";
+import { useSessionStorage } from "usehooks-ts";
 
 export default function IssuesPage() {
+  const token = useAccessToken();
+  const [, setValue] = useSessionStorage("ac", token);
+
+  useEffect(() => {
+    if (!token) return;
+    setValue(token);
+  }, [token]);
+
   return (
     <div className="p-2 mt-5">
       <div className="flex flex-col sm:flex-row gap-x-6 gap-y-4">

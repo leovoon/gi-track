@@ -30,7 +30,8 @@ export default function IssuesList() {
     searchGlobalTerm,
     selectedLabel,
     selectedStatus,
-    myIssueOnly
+    myIssueOnly,
+    queryClient
   );
 
   return (

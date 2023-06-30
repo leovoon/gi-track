@@ -24,7 +24,7 @@ async function fetchAccessToken(userId: string, provider: string) {
 export const useAccessToken = () => {
   const { userId } = useAuth();
   if (!userId) {
-    throw new Error("No user id found");
+    throw new Error("No user");
   }
   const provider = "oauth_github";
   const { data, isError } = useQuery<OauthToken[]>(

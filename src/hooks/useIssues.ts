@@ -195,7 +195,8 @@ export function useSearchGlobalIssues(
   search: string,
   label?: string[] | null,
   status?: string,
-  myIssuesOnly?: boolean
+  myIssuesOnly?: boolean,
+  queryClient?: QueryClient
 ) {
   const token = useToken();
   const statusStr = status ? `is:${status}` : "";
@@ -213,7 +214,18 @@ export function useSearchGlobalIssues(
   const issues = useQuery<Issues>(
     ["issues-global", { searchString, token, myIssuesOnly }],
     ({ signal }) =>
-      fetchWithHeaders(`/search/issues?q=${searchString}`, token, { signal }),
+      fetchWithHeaders(`/search/issues?q=${searchString}`, token, {
+        signal,
+      }).then((issues: Issues) => {
+        issues.items.forEach((issue: Issue) => {
+          if (!queryClient) return issues;
+          queryClient.setQueryData(
+            ["issue", { issueId: `${issue.number}`, token }],
+            issue
+          );
+        });
+        return issues;
+      }),
     { enabled: !myIssuesOnly && !!token, staleTime: 1000 * 60 }
   );
 

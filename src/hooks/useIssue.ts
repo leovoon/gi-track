@@ -1,6 +1,12 @@
-import { UseQueryOptions, useQueries } from "@tanstack/react-query";
+import {
+  QueryClient,
+  UseQueryOptions,
+  useQueries,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { fetchWithHeaders } from "@/lib/utils";
 import { useToken } from "./useAccessToken";
+import { Issues } from "./useIssues";
 export interface Issue {
   url: string;
   repository_url: string;
@@ -16,8 +22,8 @@ export interface Issue {
   labels: Label[];
   state: string;
   locked: boolean;
-  assignee: Assignee;
-  assignees: Assignee2[];
+  assignee?: Assignee;
+  assignees?: Assignee2[];
   milestone: any;
   comments: number;
   created_at: string;
@@ -25,8 +31,8 @@ export interface Issue {
   closed_at: any;
   author_association: string;
   active_lock_reason: any;
-  body: string;
-  closed_by: ClosedBy;
+  body?: string;
+  closed_by?: ClosedBy;
   reactions: Reactions;
   timeline_url: string;
   performed_via_github_app: any;
@@ -191,11 +197,14 @@ export interface Reactions {
   eyes: number;
 }
 
-export function useIssue(params: {
-  repoUsername?: string;
-  repoName?: string;
-  issueId?: string;
-}) {
+export function useIssue(
+  params: {
+    repoUsername?: string;
+    repoName?: string;
+    issueId?: string;
+  },
+  queryClient: QueryClient
+) {
   const token = useToken();
   const { repoUsername, repoName, issueId } = params;
 
@@ -204,7 +213,7 @@ export function useIssue(params: {
   >({
     queries: [
       {
-        queryKey: ["issue", { params, token }],
+        queryKey: ["issue", { issueId, token }],
         queryFn: ({ signal }) =>
           fetchWithHeaders(
             `/repos/${repoUsername}/${repoName}/issues/${issueId}`,
@@ -212,9 +221,20 @@ export function useIssue(params: {
             { signal }
           ),
         enabled: !!token,
+        initialData: () => {
+          const issues = queryClient.getQueryData<Issues>(["issues"], {
+            exact: false,
+          });
+          if (!issues) return undefined;
+          return issues.items.find((issue) => issue.number === Number(issueId));
+        },
+        initialDataUpdatedAt: () => {
+          return queryClient.getQueryState<Issues>(["issues"], { exact: false })
+            ?.dataUpdatedAt;
+        },
       },
       {
-        queryKey: ["issueComments", { params, token }],
+        queryKey: ["issueComments", { issueId, token }],
         queryFn: ({ signal }) =>
           fetchWithHeaders(
             `/repos/${repoUsername}/${repoName}/issues/${issueId}/comments`,

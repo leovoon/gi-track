@@ -9,6 +9,7 @@ import { Label } from "./ui/label";
 import IssuesSearchForm from "./issues-search-form";
 import { searchGlobalContext } from "@/contexts/searchGlobalContext";
 import { searchOwnContext } from "@/contexts/searchOwnContext";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function IssuesList() {
   const [myIssueOnly, setMyIssueOnly] = useState(true);
@@ -16,12 +17,14 @@ export default function IssuesList() {
   const { status: selectedStatus } = useContext(statusContext);
   const { searchGlobalTerm } = useContext(searchGlobalContext);
   const { searchOwnTerm } = useContext(searchOwnContext);
+  const queryClient = useQueryClient();
 
   const issuesQuery = useIssues(
     searchOwnTerm,
     selectedLabel,
     selectedStatus,
-    myIssueOnly
+    myIssueOnly,
+    queryClient
   );
   const searchIssuesQuery = useSearchGlobalIssues(
     searchGlobalTerm,

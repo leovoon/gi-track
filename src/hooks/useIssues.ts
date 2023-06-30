@@ -1,5 +1,5 @@
 import { useUser } from "@clerk/clerk-react";
-import { useQuery } from "@tanstack/react-query";
+import { QueryClient, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useToken } from "./useAccessToken";
 import { fetchWithHeaders } from "@/lib/utils";
 
@@ -26,7 +26,7 @@ export interface Issue {
   state: string;
   locked: boolean;
   assignee?: Assignee;
-  assignees: Assignee2[];
+  assignees?: Assignee2[];
   milestone: any;
   comments: number;
   created_at: string;
@@ -155,7 +155,8 @@ export function useIssues(
   search: string,
   label?: string[] | null,
   status?: string,
-  myIssuesOnly?: boolean
+  myIssuesOnly?: boolean,
+  queryClient?: QueryClient
 ) {
   const { user } = useUser();
   const token = useToken();
@@ -164,16 +165,27 @@ export function useIssues(
   const statusStr = status ? `is:${status}` : "";
   const labelsStr = label?.length ? constructLabelsString(label) : "";
   const myIssuesOnlyStr = myIssuesOnly ? `author:${username}` : "";
-
   const searchString = encodeURIComponent(
     `${search} ${myIssuesOnlyStr} ${statusStr} ${labelsStr} is:issue type:issue`
   );
 
+  // Add issues to cache, so we can use them in the issue page, without fetching again, if we already have them
   const issues = useQuery<Issues>(
     ["issues", { searchString, token, myIssuesOnly }],
     ({ signal }) =>
-      fetchWithHeaders(`/search/issues?q=${searchString}`, token, { signal }),
-    { enabled: myIssuesOnly && !!token, staleTime: 1000 * 60 }
+      fetchWithHeaders(`/search/issues?q=${searchString}`, token, {
+        signal,
+      }).then((issues: Issues) => {
+        issues.items.forEach((issue: Issue) => {
+          if (!queryClient) return issues;
+          queryClient.setQueryData(
+            ["issue", { issueId: `${issue.number}`, token }],
+            issue
+          );
+        });
+        return issues;
+      }),
+    { enabled: myIssuesOnly && !!token }
   );
 
   return issues;

@@ -10,6 +10,7 @@ import CommentItem from "@/components/comment-item";
 import SkeletonComments from "@/components/skeleton-comments";
 import SkeletonIssue from "@/components/skeleton-issue";
 import { Separator } from "@/components/ui/separator";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function IssuePage() {
   const params = useParams<{
@@ -18,7 +19,8 @@ export default function IssuePage() {
     issueId?: string;
   }>();
 
-  const { issueQuery, issueCommentsQuery } = useIssue(params);
+  const queryClient = useQueryClient();
+  const { issueQuery, issueCommentsQuery } = useIssue(params, queryClient);
 
   const issue = issueQuery.data;
   const comments = issueCommentsQuery.data;

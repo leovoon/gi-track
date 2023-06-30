@@ -10,7 +10,7 @@ export default function IssuesSearchForm({ myIssueOnly = false }) {
   const { setSearchOwnTerm } = useContext(searchOwnContext);
 
   return (
-    <div className="grid grid-cols-4 gap-4">
+    <div className="grid grid-cols-6  sm:grid-cols-4 gap-4">
       <form
         onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
           e.preventDefault();
@@ -20,7 +20,7 @@ export default function IssuesSearchForm({ myIssueOnly = false }) {
           if (myIssueOnly) setSearchOwnTerm(value);
           else setSearchGlobalTerm(value);
         }}
-        className="my-2 col-span-3"
+        className="my-2 col-span-5 sm:col-span-3"
       >
         <div className="flex items-center space-x-2">
           <Input
@@ -39,7 +39,7 @@ export default function IssuesSearchForm({ myIssueOnly = false }) {
           </Button>
         </div>
       </form>
-      <QueryLoader className="" />
+      <QueryLoader />
     </div>
   );
 }

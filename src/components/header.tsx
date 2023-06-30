@@ -20,21 +20,9 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { useEffect } from "react";
-import { useSessionStorage } from "usehooks-ts";
-import { useAccessToken } from "@/hooks/useAccessToken";
+
 export default function Header() {
-  const [value, setValue] = useSessionStorage("ac", "");
-  const { user, isSignedIn } = useUser();
-  useEffect(() => {
-    if (isSignedIn) {
-      const token = useAccessToken();
-      if (!value) {
-        if (!token) throw new Error("Missing token");
-        setValue(token);
-      }
-    }
-  }, []);
+  const { isSignedIn, user } = useUser();
   return (
     <>
       <NavigationMenu className="mt-5 px-2 justify-between ">

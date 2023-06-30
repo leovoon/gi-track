@@ -11,7 +11,7 @@ import { StatusContextProvider } from "@/contexts/statusContext";
 import { useAccessToken } from "@/hooks/useAccessToken";
 import { useSessionStorage } from "usehooks-ts";
 
-const AppPage = () => {
+export default function IssuesPage() {
   const [value, setValue] = useSessionStorage("ac", "");
 
   if (!value) {
@@ -45,6 +45,4 @@ const AppPage = () => {
       </div>
     </div>
   );
-};
-
-export default AppPage;
+}

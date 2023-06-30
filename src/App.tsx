@@ -8,7 +8,7 @@ import {
   Outlet,
 } from "react-router-dom";
 import PublicPage from "./pages/PublicPage";
-import AppPage from "./pages/AppPage";
+import IssuesPage from "./pages/IssuesPage";
 import Header from "./components/header";
 import SignInPage from "./pages/SignInPage";
 import SignUpPage from "./pages/SignUpPage";
@@ -37,7 +37,7 @@ const ClerkProviderWithRoutes = () => {
             element={
               <>
                 <SignedIn>
-                  <AppPage />
+                  <IssuesPage />
                 </SignedIn>
                 <SignedOut>
                   <PublicPage />

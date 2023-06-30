@@ -5,9 +5,11 @@ import { MessageSquare, User } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Badge } from "./ui/badge";
 import { useMemo } from "react";
-import { cn, getLabelColor } from "@/lib/utils";
+import { cn, fetchWithHeaders, getLabelColor } from "@/lib/utils";
 import { Link } from "react-router-dom";
 import StateIcon from "./state-icon";
+import { useQueryClient } from "@tanstack/react-query";
+import { useToken } from "@/hooks/useAccessToken";
 
 export function IssueItem({
   id,
@@ -31,8 +33,26 @@ export function IssueItem({
     };
   }, [repository_url]);
 
+  const queryClient = useQueryClient();
+  const token = useToken();
+
+  function prefetchComments() {
+    queryClient.prefetchQuery(
+      ["issueComments", { issueId: `${number}`, token }],
+      ({ signal }) =>
+        fetchWithHeaders(
+          `/repos/${repoUsername}/${repoName}/issues/${number}/comments`,
+          token,
+          { signal }
+        )
+    );
+  }
+
   return (
-    <Card className="grid grid-cols-8 md:grid-cols-12">
+    <Card
+      className="grid grid-cols-8 md:grid-cols-12"
+      onMouseEnter={() => prefetchComments()}
+    >
       <div className="col-span-1 -mr-6  grid place-items-center">
         <StateIcon state={state} />
       </div>

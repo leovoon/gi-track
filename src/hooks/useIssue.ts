@@ -205,19 +205,21 @@ export function useIssue(params: {
     queries: [
       {
         queryKey: ["issue", { params, token }],
-        queryFn: () =>
+        queryFn: ({ signal }) =>
           fetchWithHeaders(
             `/repos/${repoUsername}/${repoName}/issues/${issueId}`,
-            token
+            token,
+            { signal }
           ),
         enabled: !!token,
       },
       {
         queryKey: ["issueComments", { params, token }],
-        queryFn: () =>
+        queryFn: ({ signal }) =>
           fetchWithHeaders(
             `/repos/${repoUsername}/${repoName}/issues/${issueId}/comments`,
-            token
+            token,
+            { signal }
           ),
         enabled: !!token,
       },

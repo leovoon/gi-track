@@ -171,7 +171,8 @@ export function useIssues(
 
   const issues = useQuery<Issues>(
     ["issues", { searchString, token, myIssuesOnly }],
-    () => fetchWithHeaders(`/search/issues?q=${searchString}`, token),
+    ({ signal }) =>
+      fetchWithHeaders(`/search/issues?q=${searchString}`, token, { signal }),
     { enabled: myIssuesOnly && !!token, staleTime: 1000 * 60 }
   );
 
@@ -199,7 +200,8 @@ export function useSearchGlobalIssues(
 
   const issues = useQuery<Issues>(
     ["issues-global", { searchString, token, myIssuesOnly }],
-    () => fetchWithHeaders(`/search/issues?q=${searchString}`, token),
+    ({ signal }) =>
+      fetchWithHeaders(`/search/issues?q=${searchString}`, token, { signal }),
     { enabled: !myIssuesOnly && !!token, staleTime: 1000 * 60 }
   );
 

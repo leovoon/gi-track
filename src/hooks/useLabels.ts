@@ -1,6 +1,4 @@
-import { fetchWithHeaders } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
-import { useToken } from "./useAccessToken";
 
 const labels = [
   {

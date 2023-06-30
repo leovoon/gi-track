@@ -85,7 +85,6 @@ export default function IssuePage() {
                   <span>·</span>
                   <span className="inline-flex space-x-1">
                     <span>{issue.comments}</span>
-                    <span>·</span>
                     <span>{issue.comments > 1 ? "comments" : "comment"}</span>
                   </span>
                 </p>

@@ -2,7 +2,6 @@ import {
   QueryClient,
   UseQueryOptions,
   useQueries,
-  useQueryClient,
 } from "@tanstack/react-query";
 import { fetchWithHeaders } from "@/lib/utils";
 import { useToken } from "./useAccessToken";

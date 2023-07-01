@@ -1,3 +1,4 @@
+import { CollapsibleFilters } from "@/components/collapsible-filters";
 import IssuesList from "@/components/issues-list";
 import Labels from "@/components/labels";
 import Status from "@/components/status";
@@ -37,10 +38,7 @@ export default function IssuesPage() {
               </SelectedLabelProvider>
             </section>
             <aside className="sm:w-1/2 order-1 sm:order-2 space-y-4">
-              <h1 className="text-xl mb-5">Labels</h1>
-              <Labels />
-              <h1 className="text-xl mb-5">Status</h1>
-              <Status />
+              <CollapsibleFilters />
             </aside>
           </StatusContextProvider>
         </SelectLabelContextProvider>

@@ -1,7 +1,5 @@
 import { CollapsibleFilters } from "@/components/collapsible-filters";
 import IssuesList from "@/components/issues-list";
-import Labels from "@/components/labels";
-import Status from "@/components/status";
 import {
   SelectLabelContextProvider,
   SelectedLabelProvider,

@@ -7,8 +7,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { statusContext, statusType } from "@/contexts/statusContext";
-import { useContext } from "react";
+import { statusType } from "@/contexts/statusContext";
+import { useStatusStore } from "@/stores/status";
 
 export default function Status() {
   const statusItems = [
@@ -16,7 +16,7 @@ export default function Status() {
     { label: "Closed", value: "closed" },
     { label: "All", value: "" },
   ];
-  const { setStatus } = useContext(statusContext);
+  const setStatus = useStatusStore((state) => state.setStatus);
 
   return (
     <Select

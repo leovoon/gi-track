@@ -1,7 +1,6 @@
 import { useIssues, useSearchGlobalIssues } from "@/hooks/useIssues";
 import { useContext, useState } from "react";
 import { selectedLabelContext } from "@/contexts/labelsContext";
-import { statusContext } from "@/contexts/statusContext";
 import SkeletonIssues from "./skeleton-issues";
 import IssuesListResult from "./issues-list-result";
 import { Switch } from "./ui/switch";
@@ -10,11 +9,13 @@ import IssuesSearchForm from "./issues-search-form";
 import { searchGlobalContext } from "@/contexts/searchGlobalContext";
 import { searchOwnContext } from "@/contexts/searchOwnContext";
 import { useQueryClient } from "@tanstack/react-query";
+import { useStatusStore } from "@/stores/status";
 
 export default function IssuesList() {
   const [myIssueOnly, setMyIssueOnly] = useState(true);
   const selectedLabel = useContext(selectedLabelContext);
-  const { status: selectedStatus } = useContext(statusContext);
+  const selectedStatus = useStatusStore((state) => state.status);
+
   const { searchGlobalTerm } = useContext(searchGlobalContext);
   const { searchOwnTerm } = useContext(searchOwnContext);
   const queryClient = useQueryClient();

@@ -15,13 +15,13 @@ export function CollapsibleFilters() {
   return (
     <div
       className={cn(
-        "flex items-center mb-2 relative",
+        "flex items-start relative h-auto",
         isOpen ? "flex-col" : "justify-between"
       )}
     >
       <div
-        className={cn("text-xl flex-grow ", {
-          "self-start ": isOpen,
+        className={cn("text-xl flex-grow h-min sm:block", {
+          "self-start absolute left-0 top-0": isOpen,
         })}
       >
         Issues List
@@ -31,7 +31,7 @@ export function CollapsibleFilters() {
         open={isOpen}
         onOpenChange={setIsOpen}
         className={cn("w-auto", {
-          "flex flex-col justify-end -mt-7": isOpen,
+          "flex flex-col justify-end": isOpen,
         })}
       >
         <CollapsibleTrigger className="sm:hidden self-end " asChild>
@@ -39,8 +39,8 @@ export function CollapsibleFilters() {
             variant="ghost"
             size="sm"
             className={cn(
-              "rounded-none rounded-tl-md rounded-tr-md active:bg-muted/50 focus:bg-muted/50",
-              isOpen ? "bg-muted/50" : " focus:bg-white dark:focus:bg-muted/50"
+              "rounded-none rounded-tl-md rounded-tr-md active:bg-muted/50 dark:bg-muted/50 ",
+              isOpen ? " bg-muted/50 " : "dark:bg-black focus:bg-white"
             )}
           >
             {isOpen ? <FilterX /> : <Filter />}
@@ -48,7 +48,7 @@ export function CollapsibleFilters() {
           </Button>
         </CollapsibleTrigger>
 
-        <CollapsibleContent className="sm:hidden bg-muted/50 rounded-md rounded-tr-none px-2 py-3 -mt-[0.5px]">
+        <CollapsibleContent className="sm:hidden bg-muted/50 dark:bg-muted/70 rounded-md rounded-tr-none px-2 py-3 -mt-[0.5px]">
           <AsideFilters className="space-y-4" />
         </CollapsibleContent>
       </Collapsible>

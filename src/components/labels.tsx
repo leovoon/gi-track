@@ -2,8 +2,8 @@ import useLabels from "@/hooks/useLabels";
 import { Badge } from "./ui/badge";
 import { cn, getLabelColor } from "@/lib/utils";
 import { Skeleton } from "./ui/skeleton";
-import { useContext } from "react";
-import { selectLabelContext } from "@/contexts/labelsContext";
+import { useLabelStore } from "@/stores/label";
+import { shallow } from "zustand/shallow";
 
 type Label = {
   id: number;
@@ -13,7 +13,10 @@ type Label = {
 export default function Labels() {
   const labels = useLabels();
 
-  const { selectedLabel, setSelectedLabel } = useContext(selectLabelContext);
+  const [selectedLabel, setSelectedLabel] = useLabelStore(
+    (state) => [state.label, state.setLabel],
+    shallow
+  );
 
   if (labels.isError) return <p>Something went wrong when fetching labels.</p>;
 

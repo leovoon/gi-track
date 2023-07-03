@@ -7,8 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { statusType } from "@/contexts/statusContext";
-import { useStatusStore } from "@/stores/status";
+import { StatusType, useStatusStore } from "@/stores/status";
 
 export default function Status() {
   const statusItems = [
@@ -20,7 +19,7 @@ export default function Status() {
 
   return (
     <Select
-      onValueChange={(value: statusType) => {
+      onValueChange={(value: StatusType) => {
         setStatus(value);
       }}
     >

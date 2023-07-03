@@ -1,13 +1,13 @@
-import { useContext } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { searchGlobalContext } from "@/contexts/searchGlobalContext";
-import { searchOwnContext } from "@/contexts/searchOwnContext";
 import QueryLoader from "./query-loader";
+import { useGlobalSearchStore, useSelfSearchStore } from "@/stores/search";
 
 export default function IssuesSearchForm({ myIssueOnly = false }) {
-  const { setSearchGlobalTerm } = useContext(searchGlobalContext);
-  const { setSearchOwnTerm } = useContext(searchOwnContext);
+  const setSearchGlobalTerm = useGlobalSearchStore(
+    (state) => state.setGlobalSearch
+  );
+  const setSearchOwnTerm = useSelfSearchStore((state) => state.setSelfSearch);
 
   return (
     <div className="grid grid-cols-6  sm:grid-cols-4 gap-4">
@@ -20,7 +20,7 @@ export default function IssuesSearchForm({ myIssueOnly = false }) {
           if (myIssueOnly) setSearchOwnTerm(value);
           else setSearchGlobalTerm(value);
         }}
-        className="my-2 col-span-5 sm:col-span-3"
+        className="my-2 col-span-6 sm:col-span-3"
       >
         <div className="flex items-center space-x-2">
           <Input

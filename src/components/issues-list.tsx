@@ -1,23 +1,19 @@
 import { useIssues, useSearchGlobalIssues } from "@/hooks/useIssues";
-import { useContext, useState } from "react";
-import { selectedLabelContext } from "@/contexts/labelsContext";
 import SkeletonIssues from "./skeleton-issues";
 import IssuesListResult from "./issues-list-result";
-import { Switch } from "./ui/switch";
-import { Label } from "./ui/label";
 import IssuesSearchForm from "./issues-search-form";
-import { searchGlobalContext } from "@/contexts/searchGlobalContext";
-import { searchOwnContext } from "@/contexts/searchOwnContext";
 import { useQueryClient } from "@tanstack/react-query";
 import { useStatusStore } from "@/stores/status";
+import { useLabelStore } from "@/stores/label";
+import { useGlobalSearchStore, useSelfSearchStore } from "@/stores/search";
+import { useOwnerStore } from "@/stores/owner";
 
 export default function IssuesList() {
-  const [myIssueOnly, setMyIssueOnly] = useState(true);
-  const selectedLabel = useContext(selectedLabelContext);
+  const myIssueOnly = useOwnerStore((state) => state.isOwner);
+  const selectedLabel = useLabelStore((state) => state.label);
   const selectedStatus = useStatusStore((state) => state.status);
-
-  const { searchGlobalTerm } = useContext(searchGlobalContext);
-  const { searchOwnTerm } = useContext(searchOwnContext);
+  const searchGlobalTerm = useGlobalSearchStore((state) => state.globalSearch);
+  const searchOwnTerm = useSelfSearchStore((state) => state.selfSearch);
   const queryClient = useQueryClient();
 
   const issuesQuery = useIssues(
@@ -37,16 +33,6 @@ export default function IssuesList() {
 
   return (
     <>
-      <div className="flex items-center space-x-2 mb-4">
-        <Switch
-          id="my-issue"
-          checked={myIssueOnly}
-          onCheckedChange={() => {
-            setMyIssueOnly(!myIssueOnly);
-          }}
-        />
-        <Label htmlFor="my-issue">My Issues only</Label>
-      </div>
       <IssuesSearchForm myIssueOnly={myIssueOnly} />
       {issuesQuery.fetchStatus === "idle" && issuesQuery.isLoading ? (
         searchIssuesQuery.isLoading ? (

@@ -11,19 +11,24 @@ import SkeletonComments from "@/components/skeleton-comments";
 import SkeletonIssue from "@/components/skeleton-issue";
 import { Separator } from "@/components/ui/separator";
 import { useQueryClient } from "@tanstack/react-query";
+import { useUser } from "@clerk/clerk-react";
+import IssueTitle from "@/components/issue-title";
 
 export default function IssuePage() {
   const params = useParams<{
-    repoUsername?: string;
-    repoName?: string;
+    repoUsername: string;
+    repoName: string;
     issueId?: string;
   }>();
+
+  const { repoName } = params;
 
   const queryClient = useQueryClient();
   const { issueQuery, issueCommentsQuery } = useIssue(params, queryClient);
 
   const issue = issueQuery.data;
   const comments = issueCommentsQuery.data;
+  const { user } = useUser();
 
   return (
     <main className="mt-4 p-2 space-y-6 sm:space-y-10">
@@ -63,10 +68,12 @@ export default function IssuePage() {
                 />
                 <span>{issue.state}</span>
               </div>
-              <h1 className="text-lg sm:text-2xl font-bold ">
-                <span>{issue.title}</span>{" "}
-                <span className="text-muted-foreground">#{issue.number}</span>
-              </h1>
+              <IssueTitle
+                title={issue.title}
+                number={issue.number}
+                owner={issue.user.login}
+                repoName={repoName!}
+              />
               <div className="space-y-2">
                 {issue.labels.length > 0 && (
                   <ul className="flex gap-1 flex-wrap">
@@ -79,8 +86,10 @@ export default function IssuePage() {
                 )}
                 <p className="text-xs sm:text-sm text-muted-foreground space-x-1">
                   <span>
-                    You opened this issue{" "}
-                    <TimeAgo datetime={issue.created_at} />
+                    {issue.user.login === user?.username
+                      ? "You"
+                      : issue.user.login}{" "}
+                    opened this issue <TimeAgo datetime={issue.created_at} />
                   </span>
                   <span>·</span>
                   <span className="inline-flex space-x-1">

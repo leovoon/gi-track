@@ -212,7 +212,7 @@ export function useIssue(
   >({
     queries: [
       {
-        queryKey: ["issue", { issueId, token }],
+        queryKey: ["issue", { issueId }],
         queryFn: ({ signal }) =>
           fetchWithHeaders(
             `/repos/${repoUsername}/${repoName}/issues/${issueId}`,
@@ -220,6 +220,7 @@ export function useIssue(
             { signal }
           ),
         enabled: !!token,
+        staleTime: 1000 * 60,
         initialData: () => {
           const issues = queryClient.getQueryData<Issues>(["issues"], {
             exact: false,
@@ -233,7 +234,7 @@ export function useIssue(
         },
       },
       {
-        queryKey: ["issueComments", { issueId, token }],
+        queryKey: ["issueComments", { issueId }],
         queryFn: ({ signal }) =>
           fetchWithHeaders(
             `/repos/${repoUsername}/${repoName}/issues/${issueId}/comments`,

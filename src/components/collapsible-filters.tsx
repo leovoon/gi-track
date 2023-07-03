@@ -39,8 +39,10 @@ export function CollapsibleFilters() {
             variant="ghost"
             size="sm"
             className={cn(
-              "rounded-none rounded-tl-md rounded-tr-md active:bg-muted/50 dark:bg-muted/50 ",
-              isOpen ? " bg-muted/50 " : "dark:bg-black focus:bg-white"
+              "rounded-none rounded-tl-md rounded-tr-md active:bg-muted/50 dark:active:bg-muted/70 ",
+              isOpen
+                ? " bg-muted/50 dark:bg-muted/70"
+                : "dark:bg-inherit focus:bg-white"
             )}
           >
             {isOpen ? <FilterX /> : <Filter />}

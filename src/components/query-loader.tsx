@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { useIsFetching } from "@tanstack/react-query";
+import { useIsFetching, useIsMutating } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import LoadingBar from "react-top-loading-bar";
@@ -12,6 +12,8 @@ export default function QueryLoader({
     type: "inactive",
   });
 
+  const isMutating = useIsMutating();
+
   const [progress, setProgress] = useState(0);
 
   async function startProgress() {
@@ -23,10 +25,10 @@ export default function QueryLoader({
   }
 
   useEffect(() => {
-    if (isFetching) startProgress();
-  }, []);
+    if (isFetching || isMutating) startProgress();
+  }, [isFetching, isMutating]);
 
-  if (!isFetching) return null;
+  if (!isFetching && !isMutating) return null;
 
   return (
     <>

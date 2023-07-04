@@ -30,6 +30,7 @@ export function getLabelColor(labelName: string): BadgeVariants {
       return "secondary";
   }
 }
+export type GithubError = { message: string; documentation_url: string };
 
 export async function fetchWithHeaders(
   url: string,
@@ -50,6 +51,12 @@ export async function fetchWithHeaders(
       ...headers,
     },
   });
+
+  if (!response.ok) {
+    const error: GithubError = await response.json();
+    if (error.message) throw new Error(error.message);
+    throw new Error("Error fetching data.");
+  }
 
   return await response.json();
 }

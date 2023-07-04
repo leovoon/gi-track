@@ -5,13 +5,16 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useToken } from "@/hooks/useAccessToken";
 import { useUpdateIssueTitle } from "@/hooks/useUpdateIssueTitle";
 import { useUpdateIssueTitleContext } from "@/stores/issue-title";
+import { Link } from "react-router-dom";
 
 export default function IssueTitle({
+  html_url,
   title,
   number,
   owner,
   repoName,
 }: {
+  html_url: string;
   title: string;
   number: number;
   owner: string;
@@ -63,10 +66,10 @@ export default function IssueTitle({
           />
         </div>
       ) : (
-        <div>
+        <Link to={html_url}>
           <h1 className="inline">{title}</h1>{" "}
           <span className="text-muted-foreground">#{number}</span>
-        </div>
+        </Link>
       )}
       <div>
         {isEditing ? (

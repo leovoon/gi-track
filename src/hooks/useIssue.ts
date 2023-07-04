@@ -145,7 +145,7 @@ export interface Reactions {
   eyes: number;
 }
 
-export type IssueComments = Comment[];
+export type IssueCommentsType = Comment[];
 
 export interface Comment {
   url: string;
@@ -208,7 +208,7 @@ export function useIssue(
   const { repoUsername, repoName, issueId } = params;
 
   const [issueQuery, issueCommentsQuery] = useQueries<
-    [UseQueryOptions<Issue>, UseQueryOptions<IssueComments>]
+    [UseQueryOptions<Issue>, UseQueryOptions<IssueCommentsType>]
   >({
     queries: [
       {

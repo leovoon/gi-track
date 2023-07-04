@@ -1,10 +1,10 @@
 import { Label } from "@radix-ui/react-label";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useToken } from "@/hooks/useAccessToken";
 import { useUpdateIssueTitle } from "@/hooks/useUpdateIssueTitle";
+import { useUpdateIssueTitleContext } from "@/stores/issue-title";
 
 export default function IssueTitle({
   title,
@@ -17,10 +17,16 @@ export default function IssueTitle({
   owner: string;
   repoName: string;
 }) {
-  const token = useToken();
-  const [isEditing, setIsEditing] = useState(false);
-  const [draft, setDraft] = useState(title);
+  const [isEditing, setIsEditing] = useUpdateIssueTitleContext((state) => [
+    state.isEditing,
+    state.setIsEditing,
+  ]);
+  const [draft, setDraft] = useUpdateIssueTitleContext((state) => [
+    state.title,
+    state.setTitle,
+  ]);
 
+  const token = useToken();
   const queryClient = useQueryClient();
   const data = { owner, repoName, number, title: draft, token };
   const updateTitle = useUpdateIssueTitle(data, queryClient);
@@ -38,12 +44,6 @@ export default function IssueTitle({
     }
     setIsEditing(false);
   };
-
-  useEffect(() => {
-    if (updateTitle.isSuccess) {
-      setIsEditing(false);
-    }
-  }, [updateTitle.isSuccess]);
 
   return (
     <form

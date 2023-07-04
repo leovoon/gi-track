@@ -1,6 +1,7 @@
 import { fetchWithHeaders } from "@/lib/utils";
 import { QueryClient, useMutation } from "@tanstack/react-query";
 import { Issue } from "./useIssue";
+import { useUpdateIssueTitleContext } from "@/stores/issue-title";
 
 interface IssueTitleUpdateData {
   title: string;
@@ -28,6 +29,7 @@ export function useUpdateIssueTitle(
   queryClient: QueryClient
 ) {
   const { number } = data;
+  const setEditing = useUpdateIssueTitleContext((state) => state.setIsEditing);
   return useMutation(() => updateIssueTitle(data), {
     onMutate: async (data: string) => {
       await queryClient.cancelQueries(["issue"]);
@@ -45,6 +47,7 @@ export function useUpdateIssueTitle(
     },
     onSuccess: (data) => {
       queryClient.setQueryData(["issue", { issueId: number.toString() }], data);
+      setEditing(false);
     },
     onError: (_err, _data, context) => {
       if (context?.previousIssue) {

@@ -55,6 +55,9 @@ dependencies:
   clsx:
     specifier: ^1.2.1
     version: 1.2.1
+  immer:
+    specifier: ^10.0.2
+    version: 10.0.2
   localforage:
     specifier: ^1.10.0
     version: 1.10.0
@@ -96,7 +99,7 @@ dependencies:
     version: 2.9.1(react-dom@18.2.0)(react@18.2.0)
   zustand:
     specifier: ^4.3.8
-    version: 4.3.8(react@18.2.0)
+    version: 4.3.8(immer@10.0.2)(react@18.2.0)
 
 devDependencies:
   '@tanstack/eslint-plugin-query':
@@ -2393,6 +2396,10 @@ packages:
     resolution: {integrity: sha512-XXOFtyqDjNDAQxVfYxuF7g9Il/IbWmmlQg2MYKOH8ExIT1qg6xc4zyS3HaEEATgs1btfzxq15ciUiY7gjSXRGQ==}
     dev: false
 
+  /immer@10.0.2:
+    resolution: {integrity: sha512-Rx3CqeqQ19sxUtYV9CU911Vhy8/721wRFnJv3REVGWUmoAcIwzifTsdmJte/MV+0/XpM35LZdQMBGkRIoLPwQA==}
+    dev: false
+
   /import-fresh@3.3.0:
     resolution: {integrity: sha512-veYYhQa+D1QBKznvhUHxb8faxlrwUnxseDAbAp457E0wLNio2bOSKnjYDhMj+YiAq61xrMGhQk9iXVk5FzgQMw==}
     engines: {node: '>=6'}
@@ -3318,7 +3325,7 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /zustand@4.3.8(react@18.2.0):
+  /zustand@4.3.8(immer@10.0.2)(react@18.2.0):
     resolution: {integrity: sha512-4h28KCkHg5ii/wcFFJ5Fp+k1J3gJoasaIbppdgZFO4BPJnsNxL0mQXBSFgOgAdCdBj35aDTPvdAJReTMntFPGg==}
     engines: {node: '>=12.7.0'}
     peerDependencies:
@@ -3330,6 +3337,7 @@ packages:
       react:
         optional: true
     dependencies:
+      immer: 10.0.2
       react: 18.2.0
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false

@@ -13,6 +13,7 @@ import { Separator } from "@/components/ui/separator";
 import { useQueryClient } from "@tanstack/react-query";
 import { useUser } from "@clerk/clerk-react";
 import IssueTitle from "@/components/issue-title";
+import { IssueTitleUpdateProvider } from "@/stores/issue-title";
 
 export default function IssuePage() {
   const params = useParams<{
@@ -68,12 +69,14 @@ export default function IssuePage() {
                 />
                 <span>{issue.state}</span>
               </div>
-              <IssueTitle
-                title={issue.title}
-                number={issue.number}
-                owner={issue.user.login}
-                repoName={repoName!}
-              />
+              <IssueTitleUpdateProvider title={issue.title}>
+                <IssueTitle
+                  title={issue.title}
+                  number={issue.number}
+                  owner={issue.user.login}
+                  repoName={repoName!}
+                />
+              </IssueTitleUpdateProvider>
               <div className="space-y-2">
                 {issue.labels.length > 0 && (
                   <ul className="flex gap-1 flex-wrap">

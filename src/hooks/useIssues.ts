@@ -151,12 +151,38 @@ const constructLabelsString = (label: string[] | null) => {
     .join(",");
 };
 
+export async function fetchIssues(
+  searchString: string,
+  pagination: string,
+  token: string,
+  queryClient?: QueryClient,
+  signal?: AbortSignal
+) {
+  const issues = await fetchWithHeaders(
+    `/search/issues?q=${searchString}${pagination}`,
+    token,
+    {
+      signal,
+    }
+  );
+  issues.items.forEach((issue: Issue) => {
+    if (!queryClient) return;
+    queryClient.setQueryData(
+      ["issue", { issueId: `${issue.number}`, token }],
+      issue
+    );
+  });
+  return issues;
+}
+
 export function useIssues(
   search: string,
   label?: string[] | null,
   status?: string,
   myIssuesOnly?: boolean,
-  queryClient?: QueryClient
+  queryClient?: QueryClient,
+  page?: number,
+  per_page?: number
 ) {
   const { user } = useUser();
   const token = useToken();
@@ -168,24 +194,15 @@ export function useIssues(
   const searchString = encodeURIComponent(
     `${search} ${myIssuesOnlyStr} ${statusStr} ${labelsStr} is:issue type:issue`
   );
+  const pagination =
+    page && per_page ? `&page=${page}&per_page=${per_page}` : "";
 
   // Add issues to cache, so we can use them in the issue page, without fetching again, if we already have them
   const issues = useQuery<Issues>(
-    ["issues", { searchString, token, myIssuesOnly }],
+    ["issues", { searchString, page, myIssuesOnly }],
     ({ signal }) =>
-      fetchWithHeaders(`/search/issues?q=${searchString}`, token, {
-        signal,
-      }).then((issues: Issues) => {
-        issues.items.forEach((issue: Issue) => {
-          if (!queryClient) return issues;
-          queryClient.setQueryData(
-            ["issue", { issueId: `${issue.number}`, token }],
-            issue
-          );
-        });
-        return issues;
-      }),
-    { enabled: myIssuesOnly && !!token }
+      fetchIssues(searchString, pagination, token, queryClient, signal),
+    { enabled: myIssuesOnly && !!token, keepPreviousData: true }
   );
 
   return issues;
@@ -196,12 +213,16 @@ export function useSearchGlobalIssues(
   label?: string[] | null,
   status?: string,
   myIssuesOnly?: boolean,
-  queryClient?: QueryClient
+  queryClient?: QueryClient,
+  page?: number,
+  per_page?: number
 ) {
   const token = useToken();
   const statusStr = status ? `is:${status}` : "";
   const labelsStr = label?.length ? constructLabelsString(label) : "";
   let searchStr = search;
+  const pagination =
+    page && per_page ? `&page=${page}&per_page=${per_page}` : "";
 
   if (!search) {
     searchStr = "Tanstack/query";
@@ -212,21 +233,14 @@ export function useSearchGlobalIssues(
   );
 
   const issues = useQuery<Issues>(
-    ["issues-global", { searchString, token, myIssuesOnly }],
+    ["issues-global", { searchString, page, myIssuesOnly }],
     ({ signal }) =>
-      fetchWithHeaders(`/search/issues?q=${searchString}`, token, {
-        signal,
-      }).then((issues: Issues) => {
-        issues.items.forEach((issue: Issue) => {
-          if (!queryClient) return issues;
-          queryClient.setQueryData(
-            ["issue", { issueId: `${issue.number}`, token }],
-            issue
-          );
-        });
-        return issues;
-      }),
-    { enabled: !myIssuesOnly && !!token, staleTime: 1000 * 60 }
+      fetchIssues(searchString, pagination, token, queryClient, signal),
+    {
+      enabled: !myIssuesOnly && !!token,
+      staleTime: 1000 * 60,
+      keepPreviousData: true,
+    }
   );
 
   return issues;

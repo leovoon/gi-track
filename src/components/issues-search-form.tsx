@@ -3,7 +3,7 @@ import { Button } from "./ui/button";
 import QueryLoader from "./query-loader";
 import { useGlobalSearchStore, useSelfSearchStore } from "@/stores/search";
 
-export default function IssuesSearchForm({ myIssueOnly = false }) {
+export default function IssuesSearchForm({ myIssuesOnly = false }) {
   const setSearchGlobalTerm = useGlobalSearchStore(
     (state) => state.setGlobalSearch
   );
@@ -17,7 +17,7 @@ export default function IssuesSearchForm({ myIssueOnly = false }) {
           const value = (
             e.currentTarget.elements.namedItem("search") as HTMLInputElement
           ).value;
-          if (myIssueOnly) setSearchOwnTerm(value);
+          if (myIssuesOnly) setSearchOwnTerm(value);
           else setSearchGlobalTerm(value);
         }}
         className="my-2 col-span-6 sm:col-span-3"
@@ -29,7 +29,7 @@ export default function IssuesSearchForm({ myIssueOnly = false }) {
             name="search"
             onChange={(e) => {
               if (e.target.value.length === 0) {
-                if (myIssueOnly) setSearchOwnTerm("");
+                if (myIssuesOnly) setSearchOwnTerm("");
                 else setSearchGlobalTerm("");
               }
             }}

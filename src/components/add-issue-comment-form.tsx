@@ -45,9 +45,10 @@ export default function AddIssueCommentForm({
 
   return (
     <>
-      <form onSubmit={handleSubmit} className="grid w-full gap-2 my-4">
+      <form onSubmit={handleSubmit} className="grid w-full gap-2 my-4 ">
         <Textarea
           required
+          rows={6}
           value={comment}
           onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
             setComment(e.target.value);

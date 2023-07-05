@@ -7,37 +7,43 @@ import { useStatusStore } from "@/stores/status";
 import { useLabelStore } from "@/stores/label";
 import { useGlobalSearchStore, useSelfSearchStore } from "@/stores/search";
 import { useOwnerStore } from "@/stores/owner";
+import { useState } from "react";
+import { Button } from "./ui/button";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function IssuesList() {
-  const myIssueOnly = useOwnerStore((state) => state.isOwner);
+  const myIssuesOnly = useOwnerStore((state) => state.isOwner);
   const selectedLabel = useLabelStore((state) => state.label);
   const selectedStatus = useStatusStore((state) => state.status);
   const searchGlobalTerm = useGlobalSearchStore((state) => state.globalSearch);
   const searchOwnTerm = useSelfSearchStore((state) => state.selfSearch);
   const queryClient = useQueryClient();
+  const [page, setPage] = useState(1);
 
   const issuesQuery = useIssues(
     searchOwnTerm,
     selectedLabel,
     selectedStatus,
-    myIssueOnly,
-    queryClient
+    myIssuesOnly,
+    queryClient,
+    page,
+    5
   );
-  const searchIssuesQuery = useSearchGlobalIssues(
+  const globalIssuesQuery = useSearchGlobalIssues(
     searchGlobalTerm,
     selectedLabel,
     selectedStatus,
-    myIssueOnly,
+    myIssuesOnly,
     queryClient
   );
 
   return (
     <>
-      <IssuesSearchForm myIssueOnly={myIssueOnly} />
+      <IssuesSearchForm myIssuesOnly={myIssuesOnly} />
       {issuesQuery.fetchStatus === "idle" && issuesQuery.isLoading ? (
-        searchIssuesQuery.isLoading ? (
+        globalIssuesQuery.isLoading ? (
           <SkeletonIssues />
-        ) : searchIssuesQuery.isError ? (
+        ) : globalIssuesQuery.isError ? (
           <div className="text-center">
             <h1 className="text-2xl font-bold">Error</h1>
             <p className="text-gray-500">Something went wrong</p>
@@ -45,13 +51,13 @@ export default function IssuesList() {
         ) : (
           <>
             <p className="text-sm mb-2 text-muted-foreground">
-              {searchIssuesQuery.data.total_count} Results
+              {globalIssuesQuery.data.total_count} Results
             </p>
-            <IssuesListResult data={searchIssuesQuery.data} />
+            <IssuesListResult data={globalIssuesQuery.data} />
           </>
         )
-      ) : searchIssuesQuery.fetchStatus === "idle" &&
-        searchIssuesQuery.isLoading ? (
+      ) : globalIssuesQuery.fetchStatus === "idle" &&
+        globalIssuesQuery.isLoading ? (
         issuesQuery.isLoading ? (
           <SkeletonIssues />
         ) : issuesQuery.isError ? (
@@ -65,6 +71,29 @@ export default function IssuesList() {
               {issuesQuery.data.total_count} Results
             </p>{" "}
             <IssuesListResult data={issuesQuery.data} />
+            <div className="grid grid-cols-3 items-center my-10">
+              <Button
+                variant="outline"
+                size="default"
+                disabled={page === 1}
+                onClick={() => setPage((page) => page - 1)}
+              >
+                <ChevronLeft size={16} />
+                <span className="ml-2">Previous</span>
+              </Button>
+              <p className="text-center">
+                Page {page} {issuesQuery.isFetching ? <span>...</span> : ""}
+              </p>
+              <Button
+                variant="outline"
+                size="default"
+                onClick={() => setPage((page) => page + 1)}
+                disabled={issuesQuery.data.items.length < 5}
+              >
+                <ChevronRight size={16} />
+                <span className="ml-2">Next</span>
+              </Button>
+            </div>
           </>
         )
       ) : null}

@@ -37,7 +37,7 @@ export async function fetchWithHeaders(
   token: string | null,
   options: RequestInit = {}
 ): Promise<any> {
-  const githubEndpoint: string = "https://api.github.com";
+  const githubEndpoint = "https://api.github.com";
 
   const headers: HeadersInit = {
     Accept: "application/vnd.github+json",

@@ -4,6 +4,7 @@ import { IssueItem } from "./issue-item";
 export default function IssuesListResult({ data }: { data: Issues }) {
   return (
     <div className="space-y-4">
+      <ResultCount count={data.total_count} />
       {data.message ? (
         <p className="text-gray-500">{data.message}</p>
       ) : data.items && data.items.length > 0 ? (
@@ -17,4 +18,8 @@ export default function IssuesListResult({ data }: { data: Issues }) {
       )}
     </div>
   );
+}
+
+function ResultCount({ count }: { count: number }) {
+  return <p className="text-sm mb-2 text-muted-foreground">{count} Results</p>;
 }

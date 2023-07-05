@@ -1,6 +1,6 @@
 import { fetchWithHeaders } from "@/lib/utils";
 import { QueryClient, useMutation } from "@tanstack/react-query";
-import { Issue } from "./useIssue";
+import { IssueType } from "./useIssue";
 
 interface IssueStatusUpdateData {
   state: string;
@@ -33,9 +33,9 @@ export function useUpdateIssueStatus(
     mutationKey: ["issue", "state"],
     onMutate: async (data: string) => {
       await queryClient.cancelQueries(["issue"]);
-      const previousIssue = queryClient.getQueryData<Issue>(["issue"]);
+      const previousIssue = queryClient.getQueryData<IssueType>(["issue"]);
       if (previousIssue) {
-        queryClient.setQueryData<Issue>(["issue"], (old) => {
+        queryClient.setQueryData<IssueType>(["issue"], (old) => {
           if (old)
             return {
               ...old,
@@ -50,7 +50,7 @@ export function useUpdateIssueStatus(
     },
     onError: (_err, _data, context) => {
       if (context?.previousIssue) {
-        queryClient.setQueryData<Issue>(["issue"], context.previousIssue);
+        queryClient.setQueryData<IssueType>(["issue"], context.previousIssue);
       }
     },
     onSettled: () => {

@@ -6,7 +6,7 @@ import {
 import { fetchWithHeaders } from "@/lib/utils";
 import { useToken } from "./useAccessToken";
 import { Issues } from "./useIssues";
-export interface Issue {
+export interface IssueType {
   url: string;
   repository_url: string;
   labels_url: string;
@@ -208,7 +208,7 @@ export function useIssue(
   const { repoUsername, repoName, issueId } = params;
 
   const [issueQuery, issueCommentsQuery] = useQueries<
-    [UseQueryOptions<Issue>, UseQueryOptions<IssueCommentsType>]
+    [UseQueryOptions<IssueType>, UseQueryOptions<IssueCommentsType>]
   >({
     queries: [
       {

@@ -1,21 +1,17 @@
-import StateIcon from "@/components/state-icon";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { useIssue } from "@/hooks/useIssue";
-import { GithubError, cn, getLabelColor } from "@/lib/utils";
+import { GithubError } from "@/lib/utils";
 import { ChevronLeftIcon } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
-import TimeAgo from "timeago-react";
 import SkeletonComments from "@/components/skeleton-comments";
 import SkeletonIssue from "@/components/skeleton-issue";
 import { Separator } from "@/components/ui/separator";
 import { useQueryClient } from "@tanstack/react-query";
-import { useUser } from "@clerk/clerk-react";
-import IssueTitle from "@/components/issue-title";
-import { IssueTitleUpdateProvider } from "@/stores/issue-title";
+import { RedirectToSignIn, useUser } from "@clerk/clerk-react";
 import { IssueStatusUpdate } from "@/components/status-update";
 import { IssueComments } from "@/components/issue-comments";
 import AddIssueCommentForm from "@/components/add-issue-comment-form";
+import Issue from "@/components/issue";
 
 export default function IssuePage() {
   const params = useParams<{
@@ -26,12 +22,17 @@ export default function IssuePage() {
 
   const { repoName } = params;
 
+  if (!repoName) {
+    throw new Error("Repo name is required.");
+  }
+
   const queryClient = useQueryClient();
   const { issueQuery, issueCommentsQuery } = useIssue(params, queryClient);
-
-  const { data: issue } = issueQuery;
-  const comments = issueCommentsQuery.data;
   const { user } = useUser();
+
+  if (!user) {
+    return <RedirectToSignIn />;
+  }
 
   return (
     <div className="mt-4 p-2 space-y-6 sm:space-y-10">
@@ -51,73 +52,7 @@ export default function IssuePage() {
                 "Error fetching issue"}
             </div>
           ) : (
-            issue && (
-              <>
-                <div className="space-y-2">
-                  <div
-                    className={cn(
-                      "flex items-center space-x-2 w-max py-1 px-2 rounded-full text-xs font-thin",
-                      {
-                        "bg-green-300 dark:bg-green-800":
-                          issue.state === "open",
-                        "bg-purple-300 dark:bg-purple-800":
-                          issue.state === "closed",
-                      }
-                    )}
-                  >
-                    <StateIcon
-                      state={issue.state}
-                      size={15}
-                      className={
-                        issue.state === "open"
-                          ? "dark:text-green-200"
-                          : "dark:text-purple-200"
-                      }
-                    />
-                    <span>{issue.state}</span>
-                  </div>
-                  <IssueTitleUpdateProvider title={issue.title}>
-                    <IssueTitle
-                      html_url={issue.html_url}
-                      title={issue.title}
-                      number={issue.number}
-                      owner={issue.user.login}
-                      repoName={repoName!}
-                    />
-                  </IssueTitleUpdateProvider>
-                  <div className="space-y-2">
-                    {issue.labels.length > 0 && (
-                      <ul className="flex gap-1 flex-wrap">
-                        {issue.labels.map((label) => (
-                          <Badge
-                            key={label.id}
-                            variant={getLabelColor(label.name)}
-                          >
-                            {label.name}
-                          </Badge>
-                        ))}
-                      </ul>
-                    )}
-                    <p className="text-xs sm:text-sm text-muted-foreground space-x-1">
-                      <span>
-                        {issue.user.login === user?.username
-                          ? "You"
-                          : issue.user.login}{" "}
-                        opened this issue{" "}
-                        <TimeAgo datetime={issue.created_at} />
-                      </span>
-                      <span>·</span>
-                      <span className="inline-flex space-x-1">
-                        <span>{issue.comments}</span>
-                        <span>
-                          {issue.comments > 1 ? "comments" : "comment"}
-                        </span>
-                      </span>
-                    </p>
-                  </div>
-                </div>
-              </>
-            )
+            <Issue issue={issueQuery.data} repoName={repoName} user={user} />
           )}
 
           <Separator className="my-4" />
@@ -130,30 +65,30 @@ export default function IssuePage() {
                 "Error loading comments."}
             </div>
           ) : (
-            comments && (
-              <>
-                <IssueComments comments={comments} />
-                {issue && repoName && (
-                  <AddIssueCommentForm
-                    owner={issue.user.login}
-                    repoName={repoName}
-                    number={issue.number}
-                  />
-                )}
-              </>
-            )
+            <>
+              <IssueComments comments={issueCommentsQuery.data} />
+
+              {issueQuery.isSuccess && (
+                <AddIssueCommentForm
+                  owner={issueQuery.data.user.login}
+                  repoName={repoName}
+                  number={issueQuery.data.number}
+                />
+              )}
+            </>
           )}
         </section>
-        {issueQuery.isSuccess && repoName && issue && (
-          <aside className="hidden sm:block sm:w-1/3 order-1 p-2 space-y-4">
-            <IssueStatusUpdate
-              status={issue.state}
-              number={issue.number}
-              owner={issue.user.login}
-              repoName={repoName}
-            />
-          </aside>
-        )}
+        {issueQuery.isSuccess &&
+          issueQuery.data.user.login === user.username && (
+            <aside className="hidden sm:block sm:w-1/3 order-1 p-2 space-y-4">
+              <IssueStatusUpdate
+                status={issueQuery.data.state}
+                number={issueQuery.data.number}
+                owner={issueQuery.data.user.login}
+                repoName={repoName}
+              />
+            </aside>
+          )}
       </main>
     </div>
   );

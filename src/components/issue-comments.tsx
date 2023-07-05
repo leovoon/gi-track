@@ -7,7 +7,9 @@ export function IssueComments({ comments }: { comments: IssueCommentsType }) {
       {comments.length > 0 ? (
         comments.map((comment) => <CommentItem key={comment.id} {...comment} />)
       ) : (
-        <div>No comments</div>
+        <p className="text-muted-foreground text-sm h-20 grid place-items-center">
+          No comments
+        </p>
       )}
     </ul>
   );

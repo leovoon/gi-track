@@ -7,9 +7,8 @@ import { useStatusStore } from "@/stores/status";
 import { useLabelStore } from "@/stores/label";
 import { useGlobalSearchStore, useSelfSearchStore } from "@/stores/search";
 import { useOwnerStore } from "@/stores/owner";
-import { useState } from "react";
-import { Button } from "./ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { usePaginationStore } from "@/stores/pagination";
+import Pagination from "./pagination-button";
 
 export default function IssuesList() {
   const myIssuesOnly = useOwnerStore((state) => state.isOwner);
@@ -18,7 +17,10 @@ export default function IssuesList() {
   const searchGlobalTerm = useGlobalSearchStore((state) => state.globalSearch);
   const searchOwnTerm = useSelfSearchStore((state) => state.selfSearch);
   const queryClient = useQueryClient();
-  const [page, setPage] = useState(1);
+  const [page, per_page] = usePaginationStore((state) => [
+    state.page,
+    state.per_page,
+  ]);
 
   const issuesQuery = useIssues(
     searchOwnTerm,
@@ -27,7 +29,7 @@ export default function IssuesList() {
     myIssuesOnly,
     queryClient,
     page,
-    5
+    per_page
   );
   const globalIssuesQuery = useSearchGlobalIssues(
     searchGlobalTerm,
@@ -40,63 +42,37 @@ export default function IssuesList() {
   return (
     <>
       <IssuesSearchForm myIssuesOnly={myIssuesOnly} />
-      {issuesQuery.fetchStatus === "idle" && issuesQuery.isLoading ? (
-        globalIssuesQuery.isLoading ? (
-          <SkeletonIssues />
-        ) : globalIssuesQuery.isError ? (
-          <div className="text-center">
-            <h1 className="text-2xl font-bold">Error</h1>
-            <p className="text-gray-500">Something went wrong</p>
-          </div>
-        ) : (
-          <>
-            <p className="text-sm mb-2 text-muted-foreground">
-              {globalIssuesQuery.data.total_count} Results
-            </p>
-            <IssuesListResult data={globalIssuesQuery.data} />
-          </>
-        )
-      ) : globalIssuesQuery.fetchStatus === "idle" &&
-        globalIssuesQuery.isLoading ? (
+      {myIssuesOnly ? (
         issuesQuery.isLoading ? (
           <SkeletonIssues />
         ) : issuesQuery.isError ? (
-          <div className="text-center">
-            <h1 className="text-2xl font-bold">Error</h1>
-            <p className="text-gray-500">Something went wrong</p>
-          </div>
+          <Error />
         ) : (
           <>
-            <p className="text-sm mb-2 text-muted-foreground">
-              {issuesQuery.data.total_count} Results
-            </p>{" "}
             <IssuesListResult data={issuesQuery.data} />
-            <div className="grid grid-cols-3 items-center my-10">
-              <Button
-                variant="outline"
-                size="default"
-                disabled={page === 1}
-                onClick={() => setPage((page) => page - 1)}
-              >
-                <ChevronLeft size={16} />
-                <span className="ml-2">Previous</span>
-              </Button>
-              <p className="text-center">
-                Page {page} {issuesQuery.isFetching ? <span>...</span> : ""}
-              </p>
-              <Button
-                variant="outline"
-                size="default"
-                onClick={() => setPage((page) => page + 1)}
-                disabled={issuesQuery.data.items.length < 5}
-              >
-                <ChevronRight size={16} />
-                <span className="ml-2">Next</span>
-              </Button>
-            </div>
+            <Pagination
+              itemsLength={issuesQuery.data.items.length}
+              isFetching={issuesQuery.isFetching}
+              isPreviousData={issuesQuery.isPreviousData}
+            />
           </>
         )
-      ) : null}
+      ) : globalIssuesQuery.isLoading ? (
+        <SkeletonIssues />
+      ) : globalIssuesQuery.isError ? (
+        <Error />
+      ) : (
+        <IssuesListResult data={globalIssuesQuery.data} />
+      )}
     </>
+  );
+}
+
+function Error() {
+  return (
+    <div className="text-center">
+      <h1 className="text-2xl font-bold">Error</h1>
+      <p className="text-gray-500">Something went wrong</p>
+    </div>
   );
 }

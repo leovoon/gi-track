@@ -29,7 +29,7 @@ export default function CommentItem({ user, id, created_at, body }: Comment) {
           />
         </div>
         <div className="p-2 font-normal text-sm sm:text-base dark:text-foreground/80 break-words ">
-          <ReactMarkdown children={body} remarkPlugins={[remarkGfm]} />,
+          <ReactMarkdown children={body} remarkPlugins={[remarkGfm]} />
         </div>
       </div>
     </li>

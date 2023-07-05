@@ -9,6 +9,9 @@ import { useGlobalSearchStore, useSelfSearchStore } from "@/stores/search";
 import { useOwnerStore } from "@/stores/owner";
 import { usePaginationStore } from "@/stores/pagination";
 import Pagination from "./pagination-button";
+import { Button } from "./ui/button";
+import React from "react";
+import { ReloadIcon } from "@radix-ui/react-icons";
 
 export default function IssuesList() {
   const myIssuesOnly = useOwnerStore((state) => state.isOwner);
@@ -62,7 +65,30 @@ export default function IssuesList() {
       ) : globalIssuesQuery.isError ? (
         <Error />
       ) : (
-        <IssuesListResult data={globalIssuesQuery.data} />
+        <>
+          {globalIssuesQuery.data.pages.map((page, i) => (
+            <React.Fragment key={i}>
+              <IssuesListResult data={page} />
+            </React.Fragment>
+          ))}
+          {globalIssuesQuery.isFetchingNextPage && <SkeletonIssues rows={3} />}
+          <div className="flex justify-center">
+            <Button
+              className="mt-4 mb-6"
+              disabled={
+                !globalIssuesQuery.hasNextPage ||
+                globalIssuesQuery.isFetchingNextPage
+              }
+              onClick={() => globalIssuesQuery.fetchNextPage()}
+            >
+              {globalIssuesQuery.isFetchingNextPage ? (
+                <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <div>Load More</div>
+              )}
+            </Button>
+          </div>
+        </>
       )}
     </>
   );

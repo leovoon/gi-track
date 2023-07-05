@@ -1,9 +1,9 @@
 import { Skeleton } from "./ui/skeleton";
 
-export default function SkeletonIssues() {
+export default function SkeletonIssues({ rows = 7 }: { rows?: number }) {
   return (
     <>
-      {Array.from(Array(7), (_, i) => (
+      {Array.from(Array(rows), (_, i) => (
         <div
           key={i}
           className="grid grid-cols-8 sm:grid-cols-9 gap-4 mt-6 space-y-4"

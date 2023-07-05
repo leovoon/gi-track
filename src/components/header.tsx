@@ -20,6 +20,7 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import BackToTopButton from "./back-to-top";
 
 export default function Header() {
   const { isSignedIn, user } = useUser();
@@ -96,6 +97,7 @@ export default function Header() {
           )}
         </NavigationMenuList>
       </NavigationMenu>
+      <BackToTopButton />
     </>
   );
 }

@@ -1,5 +1,5 @@
 import { useUser } from "@clerk/clerk-react";
-import { QueryClient, useQuery } from "@tanstack/react-query";
+import { QueryClient, useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useToken } from "./useAccessToken";
 import { fetchWithHeaders } from "@/lib/utils";
 
@@ -168,7 +168,7 @@ export async function fetchIssues(
   issues.items.forEach((issue: Issue) => {
     if (!queryClient) return;
     queryClient.setQueryData(
-      ["issue", { issueId: `${issue.number}`, token }],
+      ["issue", { issueId: issue.number.toString() }],
       issue
     );
   });
@@ -214,15 +214,15 @@ export function useSearchGlobalIssues(
   status?: string,
   myIssuesOnly?: boolean,
   queryClient?: QueryClient,
-  page?: number,
-  per_page?: number
+  pageParam = 1,
+  per_page = 10
 ) {
   const token = useToken();
   const statusStr = status ? `is:${status}` : "";
   const labelsStr = label?.length ? constructLabelsString(label) : "";
   let searchStr = search;
   const pagination =
-    page && per_page ? `&page=${page}&per_page=${per_page}` : "";
+    pageParam && per_page ? `&page=${pageParam}&per_page=${per_page}` : "";
 
   if (!search) {
     searchStr = "Tanstack/query";
@@ -232,11 +232,17 @@ export function useSearchGlobalIssues(
     `${searchStr} ${statusStr} ${labelsStr} is:issue type:issue`
   );
 
-  const issues = useQuery<Issues>(
-    ["issues-global", { searchString, page, myIssuesOnly }],
+  const issues = useInfiniteQuery<Issues>(
+    ["issues-global", { searchString, pageParam, myIssuesOnly }],
     ({ signal }) =>
       fetchIssues(searchString, pagination, token, queryClient, signal),
     {
+      getNextPageParam: (lastPage, allpages) => {
+        if (lastPage.items.length === 0) {
+          return undefined;
+        }
+        return allpages.length + 1;
+      },
       enabled: !myIssuesOnly && !!token,
       staleTime: 1000 * 60,
       keepPreviousData: true,

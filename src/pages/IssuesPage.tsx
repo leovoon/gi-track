@@ -21,8 +21,8 @@ export default function IssuesPage() {
           <CollapsibleFilters />
           <IssuesList />
         </section>
-        <aside className="sm:w-1/2 order-1 sm:order-2 space-y-4">
-          <AsideFilters className="hidden sm:block" />
+        <aside className="sm:w-1/2 order-1 sm:order-2 space-y-4 ">
+          <AsideFilters className="hidden sm:block sm:top-0 sm:sticky pt-4" />
         </aside>
       </div>
     </div>

@@ -6,7 +6,6 @@ import { useToken } from "@/hooks/useAccessToken";
 import { useUpdateIssueTitle } from "@/hooks/useUpdateIssueTitle";
 import { useUpdateIssueTitleContext } from "@/stores/issue-title";
 import { Link } from "react-router-dom";
-import { useUser } from "@clerk/clerk-react";
 
 export default function IssueTitle({
   html_url,

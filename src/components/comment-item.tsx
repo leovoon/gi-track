@@ -1,7 +1,8 @@
 import { Comment } from "@/hooks/useIssue";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import TimeAgo from "timeago-react";
-import snarkdown from "snarkdown";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 export default function CommentItem({ user, id, created_at, body }: Comment) {
   return (
@@ -27,12 +28,9 @@ export default function CommentItem({ user, id, created_at, body }: Comment) {
             className="text-xs sm:text-sm text-muted-foreground"
           />
         </div>
-        <div
-          className="p-2 font-normal text-sm sm:text-base dark:text-foreground/80 break-words"
-          dangerouslySetInnerHTML={{
-            __html: snarkdown(body),
-          }}
-        ></div>
+        <div className="p-2 font-normal text-sm sm:text-base dark:text-foreground/80 break-words ">
+          <ReactMarkdown children={body} remarkPlugins={[remarkGfm]} />,
+        </div>
       </div>
     </li>
   );

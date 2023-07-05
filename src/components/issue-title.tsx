@@ -6,6 +6,7 @@ import { useToken } from "@/hooks/useAccessToken";
 import { useUpdateIssueTitle } from "@/hooks/useUpdateIssueTitle";
 import { useUpdateIssueTitleContext } from "@/stores/issue-title";
 import { Link } from "react-router-dom";
+import { useUser } from "@clerk/clerk-react";
 
 export default function IssueTitle({
   html_url,
@@ -13,12 +14,14 @@ export default function IssueTitle({
   number,
   owner,
   repoName,
+  authorAssosiation,
 }: {
   html_url: string;
   title: string;
   number: number;
   owner: string;
   repoName: string;
+  authorAssosiation: string;
 }) {
   const [isEditing, setIsEditing] = useUpdateIssueTitleContext((state) => [
     state.isEditing,
@@ -33,6 +36,7 @@ export default function IssueTitle({
   const queryClient = useQueryClient();
   const data = { owner, repoName, number, title: draft, token };
   const updateTitle = useUpdateIssueTitle(data, queryClient);
+  const isEditable = authorAssosiation === "OWNER";
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -48,11 +52,13 @@ export default function IssueTitle({
     setIsEditing(false);
   };
 
+  if (!isEditable) {
+    return (
+      <IssueTitleHeading html_url={html_url} title={title} number={number} />
+    );
+  }
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="text-lg sm:text-2xl font-bold flex justify-between items-center"
-    >
+    <form onSubmit={handleSubmit} className="flex justify-between items-center">
       {isEditing ? (
         <div className="flex-grow">
           <Label htmlFor="title" />
@@ -66,10 +72,7 @@ export default function IssueTitle({
           />
         </div>
       ) : (
-        <Link to={html_url}>
-          <h1 className="inline">{title}</h1>{" "}
-          <span className="text-muted-foreground">#{number}</span>
-        </Link>
+        <IssueTitleHeading html_url={html_url} title={title} number={number} />
       )}
       <div>
         {isEditing ? (
@@ -102,5 +105,22 @@ export default function IssueTitle({
         )}
       </div>
     </form>
+  );
+}
+
+function IssueTitleHeading({
+  html_url,
+  title,
+  number,
+}: {
+  html_url: string;
+  title: string;
+  number: number;
+}) {
+  return (
+    <Link to={html_url}>
+      <h1 className="text-lg sm:text-2xl font-bold">{title}</h1>{" "}
+      <span className="text-muted-foreground">#{number}</span>
+    </Link>
   );
 }

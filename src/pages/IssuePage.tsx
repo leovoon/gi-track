@@ -79,7 +79,8 @@ export default function IssuePage() {
           )}
         </section>
         {issueQuery.isSuccess &&
-          issueQuery.data.user.login === user.username && (
+          (issueQuery.data.user.login === user.username ||
+            issueQuery.data.author_association === "OWNER") && (
             <aside className="hidden sm:block sm:w-1/3 order-1 p-2 space-y-4">
               <IssueStatusUpdate
                 status={issueQuery.data.state}

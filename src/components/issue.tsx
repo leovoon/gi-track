@@ -45,6 +45,7 @@ export default function Issue({
           number={issue.number}
           owner={issue.user.login}
           repoName={repoName!}
+          authorAssosiation={issue.author_association}
         />
       </IssueTitleUpdateProvider>
       <div className="space-y-2">

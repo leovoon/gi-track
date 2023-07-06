@@ -17,4 +17,9 @@ describe("Header", () => {
       "https://github.com/leovoon/github-issues"
     );
   });
+
+  it("should render a theme toggle button", () => {
+    const { getByText } = render(<Header />);
+    expect(getByText("Toggle theme")).toBeInTheDocument();
+  });
 });

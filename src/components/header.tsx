@@ -30,7 +30,7 @@ export default function Header() {
         {/*Main nav*/}
         <NavigationMenuList>
           <NavigationMenuItem className="flex gap-2">
-            <Bug size={24} /> Github Issues Viewer
+            <Bug size={24} /> Github Issues Tracker
           </NavigationMenuItem>
         </NavigationMenuList>
 
@@ -42,7 +42,12 @@ export default function Header() {
               target="_blank"
               rel="noreferrer"
             >
-              <Button variant={"ghost"} size={"sm"} className={"w-9 px-0"}>
+              <Button
+                role="link"
+                variant={"ghost"}
+                size={"sm"}
+                className={"w-9 px-0"}
+              >
                 <Github className="h-5 w-5" />
                 <span className="sr-only">GitHub</span>
               </Button>

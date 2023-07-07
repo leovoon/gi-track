@@ -16,7 +16,7 @@ describe("Mode Toggler", () => {
     const dark = await findByRole("menuitem", { name: "Dark" });
     userEvent.click(dark);
     await waitFor(() => {
-      expect(html.classList.contains("dark")).toBeTruthy();
+      expect(html).toHaveClass("dark");
       expect(dark).not.toBeInTheDocument();
     });
   });
@@ -28,7 +28,7 @@ describe("Mode Toggler", () => {
     const light = await findByRole("menuitem", { name: "Light" });
     userEvent.click(light);
     await waitFor(() => {
-      expect(html.classList.contains("dark")).toBeFalsy();
+      expect(html).not.toHaveClass("dark");
       expect(light).not.toBeInTheDocument();
     });
   });

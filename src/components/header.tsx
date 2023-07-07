@@ -57,13 +57,14 @@ export default function Header() {
             <ModeToggle />
           </NavigationMenuItem>
 
-          {isSignedIn && user && (
+          {isSignedIn && (
             <NavigationMenuItem className="flex items-center">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="ghost"
                     className="relative h-8 w-8 rounded-full"
+                    data-testid="profile-button"
                   >
                     <Avatar className="h-8 w-8">
                       <AvatarImage

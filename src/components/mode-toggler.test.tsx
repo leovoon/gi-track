@@ -1,4 +1,4 @@
-import { render, userEvent, waitFor } from "@/lib/test-utils";
+import { render, userEvent, waitFor } from "@/test/test-utils";
 import { ModeToggle } from "./mode-toggler";
 
 describe("Mode Toggler", () => {

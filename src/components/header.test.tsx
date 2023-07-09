@@ -6,7 +6,7 @@ import { useUser } from "@clerk/clerk-react";
 describe("Header", () => {
   it("should render", () => {
     const { getByText } = render(<Header />);
-    expect(getByText("Github Issues Tracker")).toBeInTheDocument();
+    expect(getByText("git-track")).toBeInTheDocument();
   });
 
   it("should navigates to the correct GitHub link when the GitHub logo is clicked", () => {
@@ -15,7 +15,7 @@ describe("Header", () => {
     userEvent.click(githubLogo);
     expect(githubLogo.closest("a")).toHaveAttribute(
       "href",
-      "https://github.com/leovoon/github-issues"
+      "https://github.com/leovoon/gi-track"
     );
   });
 

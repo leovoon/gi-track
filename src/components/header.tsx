@@ -30,7 +30,7 @@ export default function Header() {
         {/*Main nav*/}
         <NavigationMenuList>
           <NavigationMenuItem className="flex gap-2">
-            <Bug size={24} /> Github Issues Tracker
+            <Bug size={24} /> git-track
           </NavigationMenuItem>
         </NavigationMenuList>
 
@@ -38,7 +38,7 @@ export default function Header() {
         <NavigationMenuList className="sm:gap-x-2">
           <NavigationMenuItem>
             <Link
-              to="https://github.com/leovoon/github-issues"
+              to="https://github.com/leovoon/gi-track"
               target="_blank"
               rel="noreferrer"
             >

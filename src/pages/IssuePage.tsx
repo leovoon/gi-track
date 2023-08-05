@@ -12,6 +12,7 @@ import { IssueStatusUpdate } from "@/components/status-update";
 import { IssueComments } from "@/components/issue-comments";
 import AddIssueCommentForm from "@/components/add-issue-comment-form";
 import Issue from "@/components/issue";
+import { useEffect } from "react";
 
 export default function IssuePage() {
   const params = useParams<{
@@ -19,6 +20,10 @@ export default function IssuePage() {
     repoName: string;
     issueId: string;
   }>();
+
+  useEffect(() => {
+    console.log("issueQuery.data", issueQuery?.data);
+  }, []);
 
   const { repoName } = params;
 
@@ -79,6 +84,7 @@ export default function IssuePage() {
           )}
         </section>
         {issueQuery.isSuccess &&
+          issueQuery.data.author_association !== "NONE" &&
           (issueQuery.data.user.login === user.username ||
             issueQuery.data.author_association === "OWNER") && (
             <aside className="hidden sm:block sm:w-1/3 order-1 p-2 space-y-4">

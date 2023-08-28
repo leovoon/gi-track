@@ -1,4 +1,9 @@
-import { ClerkProvider, SignedIn, SignedOut } from "@clerk/clerk-react";
+import {
+  ClerkProvider,
+  RedirectToSignIn,
+  SignedIn,
+  SignedOut,
+} from "@clerk/clerk-react";
 import {
   Route,
   Routes,
@@ -40,7 +45,7 @@ const ClerkProviderWithRoutes = () => {
                   <IssuesPage />
                 </SignedIn>
                 <SignedOut>
-                  <PublicPage />
+                  <RedirectToSignIn />
                 </SignedOut>
               </>
             }
@@ -55,7 +60,7 @@ const ClerkProviderWithRoutes = () => {
                   <IssuePage />
                 </SignedIn>
                 <SignedOut>
-                  <PublicPage />
+                  <RedirectToSignIn />
                 </SignedOut>
               </>
             }

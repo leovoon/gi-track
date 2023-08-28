@@ -12,7 +12,6 @@ import {
   Link,
   Outlet,
 } from "react-router-dom";
-import PublicPage from "./pages/PublicPage";
 import IssuesPage from "./pages/IssuesPage";
 import Header from "./components/header";
 import SignInPage from "./pages/SignInPage";

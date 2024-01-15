@@ -1,8 +1,4 @@
-import {
-  QueryClient,
-  UseQueryOptions,
-  useQueries,
-} from "@tanstack/react-query";
+import { QueryClient, UseQueryOptions, useQueries } from "@tanstack/react-query";
 import { fetchWithHeaders } from "@/lib/utils";
 import { useToken } from "./useAccessToken";
 import { Issues } from "./useIssues";
@@ -207,44 +203,35 @@ export function useIssue(
   const token = useToken();
   const { repoUsername, repoName, issueId } = params;
 
-  const [issueQuery, issueCommentsQuery] = useQueries<
-    [UseQueryOptions<IssueType>, UseQueryOptions<IssueCommentsType>]
-  >({
-    queries: [
-      {
-        queryKey: ["issue", { issueId }],
-        queryFn: ({ signal }) =>
-          fetchWithHeaders(
-            `/repos/${repoUsername}/${repoName}/issues/${issueId}`,
-            token,
-            { signal }
-          ),
-        enabled: !!token,
-        staleTime: 1000 * 60,
-        initialData: () => {
-          const issues = queryClient.getQueryData<Issues>(["issues"], {
-            exact: false,
-          });
-          if (!issues) return undefined;
-          return issues.items.find((issue) => issue.number === Number(issueId));
+  const [issueQuery, issueCommentsQuery] = useQueries<[UseQueryOptions<IssueType>, UseQueryOptions<IssueCommentsType>]>(
+    {
+      queries: [
+        {
+          queryKey: ["issue", { issueId, repoName }],
+          queryFn: ({ signal }) =>
+            fetchWithHeaders(`/repos/${repoUsername}/${repoName}/issues/${issueId}`, token, { signal }),
+          enabled: !!token,
+          staleTime: 1000 * 60,
+          initialData: () => {
+            const issues = queryClient.getQueryData<Issues>(["issues"], {
+              exact: false,
+            });
+            if (!issues) return undefined;
+            return issues.items.find((issue) => issue.number === Number(issueId));
+          },
+          initialDataUpdatedAt: () => {
+            return queryClient.getQueryState<Issues>(["issues"], { exact: false })?.dataUpdatedAt;
+          },
         },
-        initialDataUpdatedAt: () => {
-          return queryClient.getQueryState<Issues>(["issues"], { exact: false })
-            ?.dataUpdatedAt;
+        {
+          queryKey: ["issueComments", { issueId, repoName }],
+          queryFn: ({ signal }) =>
+            fetchWithHeaders(`/repos/${repoUsername}/${repoName}/issues/${issueId}/comments`, token, { signal }),
+          enabled: !!token,
         },
-      },
-      {
-        queryKey: ["issueComments", { issueId }],
-        queryFn: ({ signal }) =>
-          fetchWithHeaders(
-            `/repos/${repoUsername}/${repoName}/issues/${issueId}/comments`,
-            token,
-            { signal }
-          ),
-        enabled: !!token,
-      },
-    ],
-  });
+      ],
+    }
+  );
 
   return {
     issueQuery,

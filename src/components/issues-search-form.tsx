@@ -2,8 +2,13 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import QueryLoader from "./query-loader";
 import { useGlobalSearchStore, useSelfSearchStore } from "@/stores/search";
-
+import { useDebounceCallback } from "usehooks-ts";
 export default function IssuesSearchForm({ myIssuesOnly = false }) {
+  const debounced = useDebounceCallback((value: string) => {
+    if (myIssuesOnly) setSearchOwnTerm(value);
+    else setSearchGlobalTerm(value);
+  }, 500)
+
   const setSearchGlobalTerm = useGlobalSearchStore(
     (state) => state.setGlobalSearch
   );
@@ -27,12 +32,8 @@ export default function IssuesSearchForm({ myIssuesOnly = false }) {
             type="search"
             placeholder="Search issues"
             name="search"
-            onChange={(e) => {
-              if (e.target.value.length === 0) {
-                if (myIssuesOnly) setSearchOwnTerm("");
-                else setSearchGlobalTerm("");
-              }
-            }}
+            onChange={event => debounced(event.target.value)
+            }
           />
           <Button type="submit" size="sm">
             Search

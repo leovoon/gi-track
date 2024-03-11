@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@clerk/clerk-react": "^4.20.5",
+    "@million/lint": "^0.0.69",
     "@radix-ui/react-alert-dialog": "^1.0.4",
     "@radix-ui/react-avatar": "^1.0.3",
     "@radix-ui/react-collapsible": "^1.0.3",
@@ -44,7 +45,7 @@
     "tailwind-merge": "^1.13.2",
     "tailwindcss-animate": "^1.0.6",
     "timeago-react": "^3.0.6",
-    "usehooks-ts": "^2.9.1",
+    "usehooks-ts": "^3.0.1",
     "zustand": "^4.3.8"
   },
   "devDependencies": {

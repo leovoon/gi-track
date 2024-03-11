@@ -4,6 +4,7 @@ import { cn, getLabelColor } from "@/lib/utils";
 import { Skeleton } from "./ui/skeleton";
 import { useLabelStore } from "@/stores/label";
 import { shallow } from "zustand/shallow";
+import { useCallback } from "react";
 
 type Label = {
   id: number;
@@ -17,6 +18,15 @@ export default function Labels() {
     (state) => [state.label, state.setLabel],
     shallow
   );
+
+  const handleLabelClick = useCallback((label: string) => {
+    if (selectedLabel.includes(label)) {
+      setSelectedLabel(selectedLabel.filter((item) => item !== label));
+      return;
+    }
+    setSelectedLabel([...selectedLabel, label]);
+  }, [selectedLabel])
+
 
   if (labels.isError) return <p>Something went wrong when fetching labels.</p>;
 
@@ -35,13 +45,6 @@ export default function Labels() {
       </div>
     );
 
-  function handleLabelClick(label: string) {
-    if (selectedLabel.includes(label)) {
-      setSelectedLabel(selectedLabel.filter((item) => item !== label));
-      return;
-    }
-    setSelectedLabel([...selectedLabel, label]);
-  }
 
   return (
     <ul className="flex flex-wrap gap-1">
@@ -51,7 +54,7 @@ export default function Labels() {
           className={cn(
             " border-2 border-b-4 border-transparent border-b-gray-300 dark:border-b-gray-500 cursor-pointer",
             selectedLabel.includes(label.name) &&
-              "border-b-1 border-gray-500 font-semibold"
+            "border-b-1 border-gray-500 font-semibold"
           )}
           key={label.id}
           variant={getLabelColor(label.name)}

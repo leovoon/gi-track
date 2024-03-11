@@ -23,15 +23,19 @@ export function IssueItem({
   number,
   assignees,
 }: Issue) {
-  const { repoName, repoUsername } = useMemo(() => {
-    const repo = repository_url.split("/");
-    const repoName = repo[repo.length - 1];
-    const repoUsername = repo[repo.length - 2];
-    return {
-      repoName,
-      repoUsername,
-    };
+
+  const repo = useMemo(() => {
+    return repository_url.split("/");
   }, [repository_url]);
+
+  const repoName = useMemo(() => {
+    return repo[repo.length - 1]
+  }, [repository_url])
+
+  const repoUsername = useMemo(() => {
+    return repo[repo.length - 2];
+  }, [repository_url]);
+
 
   const queryClient = useQueryClient();
   const token = useToken();

@@ -1,8 +1,8 @@
 import { ArrowUpToLine } from "lucide-react";
 import { Button } from "./ui/button";
-import { useState } from "react";
+import { memo, useState } from "react";
 
-export default function BackToTopButton() {
+function ButtonComponent() {
   const [visible, setVisible] = useState(false);
 
   const toggleVisible = () => {
@@ -35,3 +35,6 @@ export default function BackToTopButton() {
     </Button>
   );
 }
+
+export const BackToTopButton = memo(ButtonComponent);
+

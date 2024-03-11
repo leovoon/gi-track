@@ -1,16 +1,19 @@
+import MillionLint from '@million/lint';
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
-// https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [MillionLint.vite(), react()],
   server: {
-    host: true,
+    host: true
   },
   define: {
-    global: "globalThis",
+    global: "globalThis"
   },
   resolve: {
-    alias: [{ find: "@/", replacement: "/src/" }],
-  },
+    alias: [{
+      find: "@/",
+      replacement: "/src/"
+    }]
+  }
 });

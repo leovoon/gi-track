@@ -3,7 +3,9 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
 export default defineConfig({
-  plugins: [MillionLint.vite(), react()],
+  plugins: [MillionLint.vite({
+    auto: true
+  }), react()],
   server: {
     host: true
   },
